@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {withStyles} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
@@ -9,11 +10,29 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Hidden from '@material-ui/core/Hidden';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import AppCreateReactApp from './components/create_react_app/App';
+import {connect} from 'react-redux';
+import {updateUser} from './actions/auth';
+import firebase from 'firebase';
 import './App.css';
+
+const mapStateToProps = state => ({
+  uid: state.get('auth').get('uid')
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateUser: user => {dispatch(updateUser(user))}
+});
 
 const drawerWidth = 240;
 
 const styles = theme => ({
+  loginRoot: {
+    alignItems: 'center',
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    width: '100%'
+  },
   root: {
     display: 'flex',
     height: '100%',
@@ -50,16 +69,38 @@ class App extends Component {
     };
   }
 
+  onSignInAnonymouslyClick = () => {
+    firebase.auth().signInAnonymously();
+  };
+
   onMobileDrawerToggle = () => {
     this.setState(state => ({mobileDrawerOpen: !state.mobileDrawerOpen}));
   };
 
+  componentDidMount() {
+    this.unsubscribeAuthChanged = firebase.auth().onAuthStateChanged(user => {
+      this.props.updateUser(user);
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeAuthChanged();
+  }
+
   render() {
-    const {classes} = this.props;
+    const {uid, classes} = this.props;
 
     const drawer = (
       <div></div>
     );
+
+    if (!uid) {
+      return (
+        <div className={classes.loginRoot}>
+          <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
+        </div>
+      );
+    }
 
     return (
       <div className={classes.root}>
@@ -114,4 +155,4 @@ class App extends Component {
   }
 }
 
-export default withStyles(styles, {withTheme: true})(App);
+export default withStyles(styles, {withTheme: true})(connect(mapStateToProps, mapDispatchToProps)(App));

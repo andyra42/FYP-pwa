@@ -1,10 +1,24 @@
 import {Map} from 'immutable';
+import auth from './auth';
 
-const app = (state=Map({}), action) => {
-  switch (action.type) {
-    default:
-      return state;
-  }
+export const combineReducers = reducers => {
+  return (state=Map(), action) => {
+    for (let stateKey in reducers) {
+      if (state.has(stateKey)) {
+        let oldState = state.get(stateKey);
+        let newState = reducers[stateKey](oldState, action);
+        if (newState !== oldState) {
+          state = state.set(stateKey, newState);
+        }
+      } else {
+        state = state.set(stateKey, reducers[stateKey](Map(), action));
+      }
+    }
+
+    return state;
+  };
 };
 
-export default app;
+export default combineReducers({
+  auth
+});
