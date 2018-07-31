@@ -1,4 +1,5 @@
 import {Map} from 'immutable';
+import stock from './stock';
 import auth from './auth';
 
 export const combineReducers = reducers => {
@@ -11,7 +12,7 @@ export const combineReducers = reducers => {
           state = state.set(stateKey, newState);
         }
       } else {
-        state = state.set(stateKey, reducers[stateKey](Map(), action));
+        state = state.set(stateKey, reducers[stateKey](undefined, action));
       }
     }
 
@@ -20,5 +21,6 @@ export const combineReducers = reducers => {
 };
 
 export default combineReducers({
+  stock,
   auth
 });

@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Hidden from '@material-ui/core/Hidden';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import AppCreateReactApp from './components/create_react_app/App';
+import {Home, Details} from './pages';
 import {connect} from 'react-redux';
 import {updateUser} from './actions/auth';
 import firebase from 'firebase';
@@ -147,7 +147,10 @@ class App extends Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Router>
-            <Route path="/" component={AppCreateReactApp} />
+            <div>
+              <Route path="/" exact component={Home} />
+              <Route path="/stockDetails/:stockCode" component={Details} />
+            </div>
           </Router>
         </main>
       </div>

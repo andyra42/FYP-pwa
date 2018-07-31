@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 import firebase from 'firebase';
 import './index.css';
 import App from './App';
 import app from './reducers/app';
 import registerServiceWorker from './registerServiceWorker';
 
-const store = createStore(app);
+const store = createStore(app, applyMiddleware(thunk));
 
 // Initialize Firebase
 var config = {

@@ -1,6 +1,8 @@
-import {Map} from 'immutable';
+import {fromJS} from 'immutable';
 
-const auth = (state=Map(), action) => {
+const INITIAL_STATE = fromJS({uid: null});
+
+const auth = (state=INITIAL_STATE, action) => {
   switch (action.type) {
     case 'UPDATE_USER':
       if (action.user) {
@@ -9,7 +11,7 @@ const auth = (state=Map(), action) => {
         return state.set('uid', null);
       }
     default:
-      return state.set('uid', null);
+      return state;
   }
 };
 
