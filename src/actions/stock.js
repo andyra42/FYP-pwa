@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import {fromJS} from 'immutable';
+import rp from 'request-promise';
 
 export const getStocks = () => {
   return (dispatch) => {
@@ -32,5 +33,24 @@ export const getStock = (stockCode) => {
             });
           });
     }
+  };
+};
+
+export const getStockPrices = (stockCode) => {
+  return async (dispatch) => {
+    const apiResult = await rp({
+      uri: `http://localhost:5000/stockPrices/${stockCode}`,
+      json: true
+    });
+
+    for (let i = 0; i < apiResult.stockPriceData.length; i++) {
+      apiResult.stockPriceData[i][0] = new Date(apiResult.stockPriceData[i][0]);
+    }
+
+    dispatch({
+      type: 'GET_STOCK_PRICES',
+      stockCode: stockCode,
+      stockPriceData: fromJS(apiResult.stockPriceData)
+    });
   };
 };

@@ -15,6 +15,9 @@ import {updateUser} from './actions/auth';
 import firebase from 'firebase';
 import './App.css';
 
+const google = window.google;
+google.charts.load('current', {packages: ['line']});
+
 const mapStateToProps = state => ({
   uid: state.get('auth').get('uid')
 });
@@ -65,12 +68,17 @@ class App extends Component {
     super(props);
 
     this.state = {
+      googleChartsLoaded: false,
       mobileDrawerOpen: false
     };
   }
 
   onSignInAnonymouslyClick = () => {
     firebase.auth().signInAnonymously();
+  };
+
+  onGoogleChartsLoaded = () => {
+    this.setState({googleChartsLoaded: true});
   };
 
   onMobileDrawerToggle = () => {
@@ -81,6 +89,8 @@ class App extends Component {
     this.unsubscribeAuthChanged = firebase.auth().onAuthStateChanged(user => {
       this.props.updateUser(user);
     });
+
+    google.charts.setOnLoadCallback(this.onGoogleChartsLoaded);
   }
 
   componentWillUnmount() {
@@ -100,6 +110,10 @@ class App extends Component {
           <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
         </div>
       );
+    }
+
+    if (!this.state.googleChartsLoaded) {
+      return null;
     }
 
     return (
