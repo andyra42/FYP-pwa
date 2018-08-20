@@ -1,6 +1,13 @@
 import {fromJS} from 'immutable';
 
-const INITIAL_STATE = fromJS({stocks: [], stockCodeIndexMap: {}, stockDetails: {}, stockPrices: {}});
+const INITIAL_STATE = fromJS({
+  stocks: [],
+  stockCodeIndexMap: {},
+  stockDetails: {},
+  stockPrices: {},
+  models: {},
+  predictions: {}
+});
 
 const stock = (state=INITIAL_STATE, action) => {
   switch (action.type) {
@@ -10,6 +17,10 @@ const stock = (state=INITIAL_STATE, action) => {
       return state.set('stockDetails', action.stock);
     case 'GET_STOCK_PRICES':
       return state.setIn(['stockPrices', action.stockCode], action.stockPriceData);
+    case 'GET_PREDICTIONS':
+      return state
+          .setIn(['predictions', action.stockCode], action.predictions)
+          .setIn(['models', action.stockCode], action.models);
     default:
       return state;
   }

@@ -2,16 +2,19 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {StockDetails, StockPriceChart} from '../components/stock';
-import {getStock, getStockPrices} from '../actions/stock';
+import {getStock, getStockPrices, getPredictions} from '../actions/stock';
 
 const mapStateToProps = (state, ownProps) => ({
   stock: state.get('stock').get('stockDetails'),
-  stockPrices: state.get('stock').get('stockPrices').get(ownProps.match.params.stockCode, null)
+  stockPrices: state.get('stock').get('stockPrices').get(ownProps.match.params.stockCode, null),
+  predictions: state.getIn(['stock', 'predictions', ownProps.match.params.stockCode], null),
+  models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null)
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getStock: (stockCode) => dispatch(getStock(stockCode)),
-  getStockPrices: (stockCode) => dispatch(getStockPrices(stockCode))
+  getStockPrices: (stockCode) => dispatch(getStockPrices(stockCode)),
+  getPredictions: (stockCode) => dispatch(getPredictions(stockCode))
 });
 
 const styles = () => ({
@@ -24,15 +27,23 @@ class DetailsPage extends Component {
   componentDidMount() {
     this.props.getStock(this.props.match.params.stockCode);
     this.props.getStockPrices(this.props.match.params.stockCode);
+    this.props.getPredictions(this.props.match.params.stockCode);
   }
 
   render() {
-    const {classes} = this.props;
+    const {stock, stockPrices, predictions, models, classes} = this.props;
 
     return (
       <div>
-        <StockDetails stock={this.props.stock} />
-        {this.props.stockPrices && <StockPriceChart prices={this.props.stockPrices} className={classes.stockPriceChart} />}
+        <StockDetails stock={stock} />
+        {
+          stockPrices &&
+          <StockPriceChart
+            prices={stockPrices}
+            predictions={predictions}
+            models={models}
+            className={classes.stockPriceChart} />
+        }
       </div>
     );
   }
