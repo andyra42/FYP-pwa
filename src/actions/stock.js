@@ -62,46 +62,9 @@ export const getStockPrices = (stockCode) => {
 
 export const getPredictions = (stockCode) => {
   return async (dispatch) => {
-    let predictions;
-    try {
-      predictions = await Promise.all([
-        rp({
-          uri: `http://localhost:5000/model/linear/predict/${stockCode}`,
-          qs: {
-            useStockPrice: false,
-            n: 30
-          },
-          json: true
-        }),
-        rp({
-          uri: `http://localhost:5000/model/linear/predict/${stockCode}`,
-          qs: {
-            useStockPrice: true,
-            n: 30
-          },
-          json: true
-        }),
-        rp({
-          uri: `http://localhost:5000/model/linear/predict/${stockCode}`,
-          qs: {
-            useStockPrice: false,
-            n: 365
-          },
-          json: true
-        })
-      ]);
-    } catch (e) {
-      return;
-    }
-
-    const apiResult = await Promise.resolve({
-      success: true,
-      predictions: predictions.map((prediction) => prediction.predictions),
-      models: [
-        {modelName: 'Linear Regression (30 days change)'},
-        {modelName: 'Linear Regression (30 days price)'},
-        {modelName: 'Linear Regression (1 year change)'}
-      ]
+    const apiResult = await rp({
+      uri: `http://localhost:5000/predict/${stockCode}`,
+      json: true
     });
 
     dispatch({
