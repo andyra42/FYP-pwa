@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import AppBar from '@material-ui/core/AppBar';
+import MaterialAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Hidden from '@material-ui/core/Hidden';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {withRouter} from 'react-router';
 import {Home, Details} from './pages';
 import {connect} from 'react-redux';
 import {updateUser} from './actions/auth';
@@ -62,6 +64,46 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3
   }
 });
+
+class AppBar extends Component {
+  render() {
+    const {onMobileDrawerToggle, history, location, classes} = this.props;
+
+    let appBarIcon;
+    if (location.pathname === '/') {
+      appBarIcon =
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={onMobileDrawerToggle}
+            className={classes.drawerIcon}
+          >
+            <MenuIcon />
+          </IconButton>;
+    } else {
+      appBarIcon =
+          <IconButton
+            color="inherit"
+            aria-label="back"
+            onClick={history.goBack}
+          >
+            <ArrowBackIcon />
+          </IconButton>;
+    }
+
+    return (
+      <MaterialAppBar className={classes.appBar}>
+        <Toolbar>
+          {appBarIcon}
+          <Typography variant="title" color="inherit" noWrap>
+            App
+          </Typography>
+        </Toolbar>
+      </MaterialAppBar>
+    );
+  }
+}
+AppBar = withRouter(AppBar);
 
 class App extends Component {
   constructor(props) {
@@ -118,55 +160,41 @@ class App extends Component {
 
     return (
       <div className={classes.root}>
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.onMobileDrawerToggle}
-              className={classes.drawerIcon}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="title" color="inherit" noWrap>
-              App
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Hidden mdUp>
-          <Drawer
-            variant="temporary"
-            open={this.state.mobileDrawerOpen}
-            onClose={this.onMobileDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            ModalProps={{
-              keepMounted: true
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden smDown>
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Router>
-            <div>
+        <Router>
+          <div className={classes.root}>
+            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} classes={classes} />
+            <Hidden mdUp>
+              <Drawer
+                variant="temporary"
+                open={this.state.mobileDrawerOpen}
+                onClose={this.onMobileDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                ModalProps={{
+                  keepMounted: true
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+            <Hidden smDown>
+              <Drawer
+                variant="permanent"
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+            <main className={classes.content}>
+              <div className={classes.toolbar} />
               <Route path="/" exact component={Home} />
               <Route path="/stockDetails/:stockCode" component={Details} />
-            </div>
-          </Router>
-        </main>
+            </main>
+          </div>
+        </Router>
       </div>
     );
   }
