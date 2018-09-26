@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {StockDetails, StockPriceChart} from '../components/stock';
+import {StockDetails, StockPriceChart, StockModelList} from '../components/stock';
 import {getStock, getStockPrices, getPredictions} from '../actions/stock';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -19,6 +19,9 @@ const mapDispatchToProps = (dispatch) => ({
 
 const styles = () => ({
   stockPriceChart: {
+    width: '100%'
+  },
+  stockModelList: {
     width: '100%'
   }
 });
@@ -43,6 +46,12 @@ class DetailsPage extends Component {
             predictions={predictions}
             models={models}
             className={classes.stockPriceChart} />
+        }
+        {
+          models &&
+          <StockModelList
+            models={models}
+            className={classes.stockModelList} />
         }
       </div>
     );
