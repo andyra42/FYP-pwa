@@ -71,7 +71,8 @@ export const getPredictions = (stockCode) => {
       type: 'GET_PREDICTIONS',
       stockCode: stockCode,
       predictions: fromJS(apiResult.predictions),
-      models: fromJS(apiResult.models)
+      models: fromJS(apiResult.models),
+      grade: fromJS(4)
     });
   };
 };

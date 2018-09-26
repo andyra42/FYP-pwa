@@ -20,7 +20,8 @@ const stock = (state=INITIAL_STATE, action) => {
     case 'GET_PREDICTIONS':
       return state
           .setIn(['predictions', action.stockCode], action.predictions)
-          .setIn(['models', action.stockCode], action.models);
+          .setIn(['models', action.stockCode], action.models)
+          .setIn(['grade', action.stockCode], action.grade);
     default:
       return state;
   }

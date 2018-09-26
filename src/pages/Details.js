@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {StockDetails, StockPriceChart, StockModelList} from '../components/stock';
+import {StockDetails, StockPriceChart, StockModelList, StockGrade} from '../components/stock';
 import {getStock, getStockPrices, getPredictions} from '../actions/stock';
 
 const mapStateToProps = (state, ownProps) => ({
   stock: state.get('stock').get('stockDetails'),
   stockPrices: state.get('stock').get('stockPrices').get(ownProps.match.params.stockCode, null),
   predictions: state.getIn(['stock', 'predictions', ownProps.match.params.stockCode], null),
-  models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null)
+  models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null),
+  grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -23,6 +24,9 @@ const styles = () => ({
   },
   stockModelList: {
     width: '100%'
+  },
+  stockGrade: {
+    width: '100%'
   }
 });
 
@@ -34,7 +38,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {stock, stockPrices, predictions, models, classes} = this.props;
+    const {stock, stockPrices, predictions, models, grade, classes} = this.props;
 
     return (
       <div>
@@ -46,6 +50,12 @@ class DetailsPage extends Component {
             predictions={predictions}
             models={models}
             className={classes.stockPriceChart} />
+        }
+        {
+          grade &&
+          <StockGrade
+            grade={grade}
+            className={classes.stockGrade} />
         }
         {
           models &&
