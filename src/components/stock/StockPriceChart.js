@@ -71,6 +71,9 @@ class StockPriceChart extends Component {
         viewWindow: {
           max: new Date(),
           min: new Date('2018-08-01')
+        },
+        gridlines: {
+          color: 'transparent'
         }
       }
     };
