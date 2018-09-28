@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Hidden from '@material-ui/core/Hidden';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import {Home, Details} from './pages';
@@ -67,7 +68,7 @@ const styles = theme => ({
 
 class AppBar extends Component {
   render() {
-    const {onMobileDrawerToggle, history, location, classes} = this.props;
+    const {onMobileDrawerToggle, history, location, loading, classes} = this.props;
 
     let appBarIcon;
     if (location.pathname === '/') {
@@ -99,6 +100,7 @@ class AppBar extends Component {
             App
           </Typography>
         </Toolbar>
+        {loading && <LinearProgress color="secondary" />}
       </MaterialAppBar>
     );
   }
@@ -111,7 +113,8 @@ class App extends Component {
 
     this.state = {
       googleChartsLoaded: false,
-      mobileDrawerOpen: false
+      mobileDrawerOpen: false,
+      loading: false
     };
   }
 
@@ -125,6 +128,10 @@ class App extends Component {
 
   onMobileDrawerToggle = () => {
     this.setState(state => ({mobileDrawerOpen: !state.mobileDrawerOpen}));
+  };
+
+  setLoading = (loading) => {
+    this.setState({loading: loading});
   };
 
   componentDidMount() {
@@ -162,7 +169,7 @@ class App extends Component {
       <div className={classes.root}>
         <Router>
           <div className={classes.root}>
-            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} classes={classes} />
+            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} loading={this.state.loading} classes={classes} />
             <Hidden mdUp>
               <Drawer
                 variant="temporary"
@@ -190,8 +197,13 @@ class App extends Component {
             </Hidden>
             <main className={classes.content}>
               <div className={classes.toolbar} />
-              <Route path="/" exact component={Home} />
-              <Route path="/stockDetails/:stockCode" component={Details} />
+              <Route
+                path="/"
+                exact
+                render={(props) => <Home {...props} setLoading={this.setLoading} />} />
+              <Route
+                path="/stockDetails/:stockCode"
+                render={(props) => <Details {...props} setLoading={this.setLoading} />} />
             </main>
           </div>
         </Router>

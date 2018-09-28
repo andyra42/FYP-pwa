@@ -32,9 +32,15 @@ const styles = () => ({
 
 class DetailsPage extends Component {
   componentDidMount() {
-    this.props.getStock(this.props.match.params.stockCode);
-    this.props.getStockPrices(this.props.match.params.stockCode);
-    this.props.getPredictions(this.props.match.params.stockCode);
+    this.props.setLoading(true);
+    Promise.all([
+      this.props.getStock(this.props.match.params.stockCode),
+      this.props.getStockPrices(this.props.match.params.stockCode),
+      this.props.getPredictions(this.props.match.params.stockCode)
+    ])
+    .then(() => {
+      this.props.setLoading(false);
+    });
   }
 
   render() {
