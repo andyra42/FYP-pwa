@@ -1,8 +1,38 @@
 import React, {Component} from 'react';
 import LineChart from '../charts/LineChart';
 import immutableToJsComponent from '../immutableToJsComponent';
+import StockTimeFrame from './StockTimeFrame';
+import moment from 'moment';
 
 class StockPriceChart extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {n: 0};
+  }
+
+  onTimeFrameClick = (timeFrameStr) => {
+    const {prices, predictions, models} = this.props;
+    
+    // let latestDate = moment(prices[0][0]);
+
+    switch(timeFrameStr) {
+      case "1w":
+        // var oldestDate = moment(prices[0][0]).subtract(7, 'days');
+
+        this.setState({n: 1})
+        break;
+      case "1m":
+        var text = "I am not a fan of orange.";
+        break;
+      case "3m":
+        var text = "How you like them apples?";
+        break;
+      default:
+        var text = "I have never heard of that fruit...";
+    }
+  } 
+
   render() {
     const {prices, predictions, models} = this.props;
 
@@ -36,6 +66,12 @@ class StockPriceChart extends Component {
       },
       legend: {
         position: 'none'
+      },
+      hAxis: {
+        viewWindow: {
+          max: new Date(),
+          min: new Date('2018-08-01')
+        }
       }
     };
 

@@ -19,7 +19,7 @@ import firebase from 'firebase';
 import './App.css';
 
 const google = window.google;
-google.charts.load('current', {packages: ['line']});
+google.charts.load('current', {packages: ['corechart']});
 
 const mapStateToProps = state => ({
   uid: state.get('auth').get('uid')
