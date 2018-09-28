@@ -8,29 +8,38 @@ class StockPriceChart extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {n: 0};
+    this.state = {timeInterval: moment().subtract(3, 'months').toDate()};
   }
 
   onTimeFrameClick = (timeFrameStr) => {
     const {prices, predictions, models} = this.props;
     
-    // let latestDate = moment(prices[0][0]);
+    let timeInterval = moment();
 
     switch(timeFrameStr) {
       case "1w":
-        // var oldestDate = moment(prices[0][0]).subtract(7, 'days');
-
-        this.setState({n: 1})
+        timeInterval = timeInterval.subtract(7, 'days');
         break;
       case "1m":
-        var text = "I am not a fan of orange.";
+        timeInterval = timeInterval.subtract(1, 'months');
         break;
       case "3m":
-        var text = "How you like them apples?";
+        timeInterval = timeInterval.subtract(3, 'months');
+        break;
+      case "6m":
+        timeInterval = timeInterval.subtract(6, 'months');
+        break;
+      case "1y":
+        timeInterval = timeInterval.subtract(1, 'years');
+        break;
+      case "2y":
+        timeInterval = timeInterval.subtract(2, 'years');
         break;
       default:
-        var text = "I have never heard of that fruit...";
+        timeInterval = timeInterval.subtract(5, 'years');
     }
+    this.setState({timeInterval: timeInterval.toDate()});
+    console.log(this.state)
   } 
 
   render() {
@@ -40,11 +49,16 @@ class StockPriceChart extends Component {
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
 
     if (predictions) {
+      // Append the predictions to the data
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < predictions.length; j++) {
           data[i].push(null);
         }
       }
+
+      data.push(
+        [data[0][0], null, data[0][1], data[0][1]]
+       )
 
       let lastDateTimestamp = data[0][0].getTime();
       for (let i = 0; i < predictions[0].length; i++) {
@@ -69,8 +83,7 @@ class StockPriceChart extends Component {
       },
       hAxis: {
         viewWindow: {
-          max: new Date(),
-          min: new Date('2018-08-01')
+          min: this.state.timeInterval
         },
         gridlines: {
           color: 'transparent'
@@ -78,7 +91,9 @@ class StockPriceChart extends Component {
       }
     };
 
-    return <LineChart data={data} columns={columns} options={options} />;
+    return (
+      <LineChart data={data} columns={columns} options={options} />
+    )
   }
 }
 
