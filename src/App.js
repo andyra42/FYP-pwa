@@ -7,6 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Hidden from '@material-ui/core/Hidden';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
@@ -14,6 +15,8 @@ import {withRouter} from 'react-router';
 import {Home, Details} from './pages';
 import {connect} from 'react-redux';
 import {updateUser} from './actions/auth';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import Input from '@material-ui/core/Input';
 import firebase from 'firebase';
 import './App.css';
 
@@ -62,7 +65,49 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
     padding: theme.spacing.unit * 3
-  }
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing.unit * 2,
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit * 3,
+      width: 'auto',
+    },
+  },
+  grow:{
+    flexGrow:0.2
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 500,
+    },
+  },
 });
 
 class AppBar extends Component {
@@ -98,6 +143,19 @@ class AppBar extends Component {
           <Typography variant="title" color="inherit" noWrap>
             App
           </Typography>
+          <div className={classes.grow}/>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+                <SearchIcon />
+            </div>
+            <Input
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+            />
+          </div>
         </Toolbar>
       </MaterialAppBar>
     );

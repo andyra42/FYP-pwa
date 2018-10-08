@@ -115,9 +115,7 @@ class FilterableStockTable extends React.Component{
       <div>
         <SearchBar
           filterText={this.state.filterText}
-          inStockOnly={this.state.inStockOnly}
           onFilterTextChange={this.handleFilterTextChange}
-          onInStockChange={this.handleInStockChange}
         />
         
         <StockTable
