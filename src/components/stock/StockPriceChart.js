@@ -10,17 +10,22 @@ class StockPriceChart extends Component {
     let data = prices;
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
 
-    if (predictions) {
-      // Append the predictions to the data
+    // Append the predictions to the data
+    if (predictions && predictions[0]) {
+      // Append the nulls
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < predictions.length; j++) {
           data[i].push(null);
         }
       }
 
-      data.push(
-        [data[0][0], null, data[0][1], data[0][1]]
-       )
+      let row = [data[0][0], null];
+      for (let i = 0; i < predictions.length; i++) {
+        row.push(data[0][1]);
+      }
+
+      // initial point for the predictions
+      data.push(row);
 
       let lastDateTimestamp = data[0][0].getTime();
       for (let i = 0; i < predictions[0].length; i++) {
@@ -52,7 +57,7 @@ class StockPriceChart extends Component {
         }
       }
     };
-
+    
     return (
       <LineChart data={data} columns={columns} options={options} />
     )
