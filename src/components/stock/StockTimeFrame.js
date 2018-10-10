@@ -21,4 +21,4 @@ class StockTimeFrame extends Component {
   }
 }
 
-export default immutableToJsComponent({});
+export default immutableToJsComponent(StockTimeFrame);

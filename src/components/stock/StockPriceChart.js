@@ -1,49 +1,11 @@
 import React, {Component} from 'react';
 import LineChart from '../charts/LineChart';
 import immutableToJsComponent from '../immutableToJsComponent';
-import StockTimeFrame from './StockTimeFrame';
-import moment from 'moment';
 
 class StockPriceChart extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {timeInterval: moment().subtract(3, 'months').toDate()};
-  }
-
-  onTimeFrameClick = (timeFrameStr) => {
-    const {prices, predictions, models} = this.props;
-    
-    let timeInterval = moment();
-
-    switch(timeFrameStr) {
-      case "1w":
-        timeInterval = timeInterval.subtract(7, 'days');
-        break;
-      case "1m":
-        timeInterval = timeInterval.subtract(1, 'months');
-        break;
-      case "3m":
-        timeInterval = timeInterval.subtract(3, 'months');
-        break;
-      case "6m":
-        timeInterval = timeInterval.subtract(6, 'months');
-        break;
-      case "1y":
-        timeInterval = timeInterval.subtract(1, 'years');
-        break;
-      case "2y":
-        timeInterval = timeInterval.subtract(2, 'years');
-        break;
-      default:
-        timeInterval = timeInterval.subtract(5, 'years');
-    }
-    this.setState({timeInterval: timeInterval.toDate()});
-    console.log(this.state)
-  } 
 
   render() {
-    const {prices, predictions, models} = this.props;
+    const {prices, predictions, models, timeInterval} = this.props;
 
     let data = prices;
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
@@ -83,7 +45,7 @@ class StockPriceChart extends Component {
       },
       hAxis: {
         viewWindow: {
-          min: this.state.timeInterval
+          min: timeInterval
         },
         gridlines: {
           color: 'transparent'
