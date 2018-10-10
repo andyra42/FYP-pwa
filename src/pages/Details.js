@@ -35,7 +35,10 @@ class DetailsPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {timeInterval: moment().subtract(3, 'months').toDate()};
+    this.state = {
+      timeInterval: moment().subtract(3, 'months').toDate(),
+      modelIndex: 0
+    };
   }
 
   onTimeFrameClick = (timeFrameStr) => {
@@ -69,6 +72,10 @@ class DetailsPage extends Component {
     console.log(this.state)
   } 
   
+  onModelClick = (modelIndex) => {
+    this.setState({modelIndex: modelIndex});
+  }
+
   componentDidMount() {
     this.props.setLoading(true);
     Promise.all([
@@ -89,11 +96,13 @@ class DetailsPage extends Component {
         <StockDetails stock={stock} />
         {
           stockPrices &&
+          predictions &&
+          models &&
           <div>
             <StockPriceChart
               prices={stockPrices}
-              predictions={predictions}
-              models={models}
+              predictions={predictions.filter((prediction, index) => {return index === this.state.modelIndex})}
+              models={models.filter((model, index) => {return index === this.state.modelIndex})}
               timeInterval={this.state.timeInterval}
               className={classes.stockPriceChart} />
             <StockTimeFrame
@@ -110,6 +119,7 @@ class DetailsPage extends Component {
           models &&
           <StockModelList
             models={models}
+            onModelClick={this.onModelClick}
             className={classes.stockModelList} />
         }
       </div>

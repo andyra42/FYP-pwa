@@ -6,12 +6,12 @@ import immutableToJsComponent from '../immutableToJsComponent';
 
 class StockModelList extends Component {
   render() {
-    const {models} = this.props;
+    const {models, onModelClick} = this.props;
 
     return (
       <List>
-        {models.map(model =>
-          <ListItem key={model.modelName} button>
+        {models.map((model, i) =>
+          <ListItem key={model.modelName} button onClick={() => onModelClick(i)}>
             <ListItemText primary={model.modelName}></ListItemText>
           </ListItem>
         )}
