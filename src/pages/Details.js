@@ -37,7 +37,7 @@ class DetailsPage extends Component {
 
     this.state = {
       timeInterval: moment().subtract(3, 'months').toDate(),
-      modelIndex: 0
+      modelIndex: [0]
     };
   }
 
@@ -73,7 +73,17 @@ class DetailsPage extends Component {
   } 
   
   onModelClick = (modelIndex) => {
-    this.setState({modelIndex: modelIndex});
+    this.setState((state) => {
+      let i = state.modelIndex.indexOf(modelIndex);
+      
+      if (i === -1) {
+        state.modelIndex.push(modelIndex);
+        return {modelIndex: state.modelIndex};
+      } else {
+        state.modelIndex.splice(i, 1);
+        return {modelIndex: state.modelIndex};
+      }
+    });
   }
 
   componentDidMount() {
@@ -101,8 +111,8 @@ class DetailsPage extends Component {
           <div>
             <StockPriceChart
               prices={stockPrices}
-              predictions={predictions.filter((prediction, index) => {return index === this.state.modelIndex})}
-              models={models.filter((model, index) => {return index === this.state.modelIndex})}
+              predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
               timeInterval={this.state.timeInterval}
               className={classes.stockPriceChart} />
             <StockTimeFrame
@@ -120,6 +130,7 @@ class DetailsPage extends Component {
           <StockModelList
             models={models}
             onModelClick={this.onModelClick}
+            selected={this.state.modelIndex}
             className={classes.stockModelList} />
         }
       </div>

@@ -11,7 +11,7 @@ class StockPriceChart extends Component {
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
 
     // Append the predictions to the data
-    if (predictions) {
+    if (predictions && predictions[0]) {
       // Append the nulls
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < predictions.length; j++) {
