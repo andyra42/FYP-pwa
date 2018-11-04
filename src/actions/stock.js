@@ -38,24 +38,34 @@ export const getStock = (stockCode) => {
 
 export const getStockPrices = (stockCode) => {
   return async (dispatch) => {
-    let apiResult;
+    let stockPrices;
     try {
-      apiResult = await rp({
-        uri: `http://localhost:5000/stockPrices/${stockCode}`,
-        json: true
-      });
+      if (process.env.REACT_APP_STOCK_PRICE_SOURCE === 'cloud') {
+        const stockPricesRef = firebase.storage().ref(`stock_prices/${stockCode}.json`);
+
+        const downloadUrl = await stockPricesRef.getDownloadURL();
+
+        const stockPricesJsonStr = await rp(downloadUrl);
+
+        stockPrices = JSON.parse(stockPricesJsonStr);
+      } else if (process.env.REACT_APP_STOCK_PRICE_SOURCE === 'local') {
+        stockPrices = await rp({
+          uri: `http://localhost:5000/stockPrices/${stockCode}`,
+          json: true
+        });
+      }
     } catch (err) {
       return;
     }
 
-    for (let i = 0; i < apiResult.stockPriceData.length; i++) {
-      apiResult.stockPriceData[i][0] = new Date(apiResult.stockPriceData[i][0]);
+    for (let i = 0; i < stockPrices.stockPrices.length; i++) {
+      stockPrices.stockPrices[i][0] = new Date(stockPrices.stockPrices[i][0]);
     }
 
     dispatch({
       type: 'GET_STOCK_PRICES',
       stockCode: stockCode,
-      stockPriceData: fromJS(apiResult.stockPriceData)
+      stockPriceData: fromJS(stockPrices.stockPrices)
     });
   };
 };
