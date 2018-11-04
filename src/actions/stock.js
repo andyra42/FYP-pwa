@@ -62,16 +62,34 @@ export const getStockPrices = (stockCode) => {
 
 export const getPredictions = (stockCode) => {
   return async (dispatch) => {
-    const apiResult = await rp({
-      uri: `http://localhost:5000/predict/${stockCode}`,
-      json: true
-    });
+    let predictions;
+
+    try {
+      if (process.env.REACT_APP_PREDICTION_SOURCE === 'cloud') {
+        const predictionsRef = firebase.storage().ref(`predictions/${stockCode}/predictions.json`);
+
+        const downloadUrl = await predictionsRef.getDownloadURL();
+
+        const predictionsJsonStr = await rp(downloadUrl);
+
+        predictions = JSON.parse(predictionsJsonStr);
+      } else if (process.env.REACT_APP_PREDICTION_SOURCE === 'local') {
+        predictions = await rp({
+          uri: `http://localhost:5000/predict/${stockCode}`,
+          json: true
+        });
+      }
+    } catch (error) {
+      console.log(error);
+
+      return;
+    }
 
     dispatch({
       type: 'GET_PREDICTIONS',
       stockCode: stockCode,
-      predictions: fromJS(apiResult.predictions),
-      models: fromJS(apiResult.models),
+      predictions: fromJS(predictions.predictions),
+      models: fromJS(predictions.models),
       grade: fromJS(4)
     });
   };
