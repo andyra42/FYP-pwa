@@ -19,8 +19,8 @@ export default class LineChart extends Component {
     for (let i = 1; i < this.props.columns.length; i++) {
       priceFormatter.format(data, i);
     }
-    let chart = new google.charts.Line(this.ref.current);
-    chart.draw(data, google.charts.Line.convertOptions(this.props.options));
+    let chart = new google.visualization.LineChart(this.ref.current);
+    chart.draw(data, this.props.options);
   }
 
   componentDidMount() {

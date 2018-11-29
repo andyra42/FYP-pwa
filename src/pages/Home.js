@@ -135,7 +135,11 @@ class HomePage extends Component {
   };
 
   componentDidMount() {
-    this.props.getStocks();
+    this.props.setLoading(true);
+    this.props.getStocks()
+        .then(() => {
+          this.props.setLoading(false);
+        });
   }
 
   render() {

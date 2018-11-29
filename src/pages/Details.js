@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {StockDetails, StockPriceChart, StockModelList, StockGrade} from '../components/stock';
+import {StockDetails, StockPriceChart, StockTimeFrame, StockModelList, StockGrade} from '../components/stock';
 import {getStock, getStockPrices, getPredictions} from '../actions/stock';
+import moment from 'moment';
 
 const mapStateToProps = (state, ownProps) => ({
   stock: state.get('stock').get('stockDetails'),
@@ -31,10 +32,70 @@ const styles = () => ({
 });
 
 class DetailsPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      timeInterval: moment().subtract(3, 'months').toDate(),
+      modelIndex: [0]
+    };
+  }
+
+  onTimeFrameClick = (timeFrameStr) => {
+    const {prices, predictions, models} = this.props;
+    
+    let timeInterval = moment();
+
+    switch(timeFrameStr) {
+      case "1w":
+        timeInterval = timeInterval.subtract(7, 'days');
+        break;
+      case "1m":
+        timeInterval = timeInterval.subtract(1, 'months');
+        break;
+      case "3m":
+        timeInterval = timeInterval.subtract(3, 'months');
+        break;
+      case "6m":
+        timeInterval = timeInterval.subtract(6, 'months');
+        break;
+      case "1y":
+        timeInterval = timeInterval.subtract(1, 'years');
+        break;
+      case "2y":
+        timeInterval = timeInterval.subtract(2, 'years');
+        break;
+      default:
+        timeInterval = timeInterval.subtract(5, 'years');
+    }
+    this.setState({timeInterval: timeInterval.toDate()});
+    console.log(this.state)
+  } 
+  
+  onModelClick = (modelIndex) => {
+    this.setState((state) => {
+      let i = state.modelIndex.indexOf(modelIndex);
+      
+      if (i === -1) {
+        state.modelIndex.push(modelIndex);
+        return {modelIndex: state.modelIndex};
+      } else {
+        state.modelIndex.splice(i, 1);
+        return {modelIndex: state.modelIndex};
+      }
+    });
+  }
+
   componentDidMount() {
-    this.props.getStock(this.props.match.params.stockCode);
-    this.props.getStockPrices(this.props.match.params.stockCode);
-    this.props.getPredictions(this.props.match.params.stockCode);
+    this.props.setLoading(true);
+    Promise.all([
+      this.props.getStock(this.props.match.params.stockCode),
+      this.props.getStockPrices(this.props.match.params.stockCode),
+      this.props.getPredictions(this.props.match.params.stockCode)
+    ])
+    .then(() => {
+      this.props.setLoading(false);
+    });
   }
 
   render() {
@@ -45,11 +106,18 @@ class DetailsPage extends Component {
         <StockDetails stock={stock} />
         {
           stockPrices &&
-          <StockPriceChart
-            prices={stockPrices}
-            predictions={predictions}
-            models={models}
-            className={classes.stockPriceChart} />
+          predictions &&
+          models &&
+          <div>
+            <StockPriceChart
+              prices={stockPrices}
+              predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              timeInterval={this.state.timeInterval}
+              className={classes.stockPriceChart} />
+            <StockTimeFrame
+              onTimeFrameClick={this.onTimeFrameClick} />
+          </div>
         }
         {
           grade &&
@@ -61,6 +129,8 @@ class DetailsPage extends Component {
           models &&
           <StockModelList
             models={models}
+            onModelClick={this.onModelClick}
+            selected={this.state.modelIndex}
             className={classes.stockModelList} />
         }
       </div>

@@ -38,40 +38,68 @@ export const getStock = (stockCode) => {
 
 export const getStockPrices = (stockCode) => {
   return async (dispatch) => {
-    let apiResult;
+    let stockPrices;
     try {
-      apiResult = await rp({
-        uri: `http://localhost:5000/stockPrices/${stockCode}`,
-        json: true
-      });
+      if (process.env.REACT_APP_STOCK_PRICE_SOURCE === 'cloud') {
+        const stockPricesRef = firebase.storage().ref(`stock_prices/${stockCode}.json`);
+
+        const downloadUrl = await stockPricesRef.getDownloadURL();
+
+        const stockPricesJsonStr = await rp(downloadUrl);
+
+        stockPrices = JSON.parse(stockPricesJsonStr);
+      } else if (process.env.REACT_APP_STOCK_PRICE_SOURCE === 'local') {
+        stockPrices = await rp({
+          uri: `http://localhost:5000/stockPrices/${stockCode}`,
+          json: true
+        });
+      }
     } catch (err) {
       return;
     }
 
-    for (let i = 0; i < apiResult.stockPriceData.length; i++) {
-      apiResult.stockPriceData[i][0] = new Date(apiResult.stockPriceData[i][0]);
+    for (let i = 0; i < stockPrices.stockPrices.length; i++) {
+      stockPrices.stockPrices[i][0] = new Date(stockPrices.stockPrices[i][0]);
     }
 
     dispatch({
       type: 'GET_STOCK_PRICES',
       stockCode: stockCode,
-      stockPriceData: fromJS(apiResult.stockPriceData)
+      stockPriceData: fromJS(stockPrices.stockPrices)
     });
   };
 };
 
 export const getPredictions = (stockCode) => {
   return async (dispatch) => {
-    const apiResult = await rp({
-      uri: `http://localhost:5000/predict/${stockCode}`,
-      json: true
-    });
+    let predictions;
+
+    try {
+      if (process.env.REACT_APP_PREDICTION_SOURCE === 'cloud') {
+        const predictionsRef = firebase.storage().ref(`predictions/${stockCode}/predictions.json`);
+
+        const downloadUrl = await predictionsRef.getDownloadURL();
+
+        const predictionsJsonStr = await rp(downloadUrl);
+
+        predictions = JSON.parse(predictionsJsonStr);
+      } else if (process.env.REACT_APP_PREDICTION_SOURCE === 'local') {
+        predictions = await rp({
+          uri: `http://localhost:5000/predict/${stockCode}`,
+          json: true
+        });
+      }
+    } catch (error) {
+      console.log(error);
+
+      return;
+    }
 
     dispatch({
       type: 'GET_PREDICTIONS',
       stockCode: stockCode,
-      predictions: fromJS(apiResult.predictions),
-      models: fromJS(apiResult.models),
+      predictions: fromJS(predictions.predictions),
+      models: fromJS(predictions.models),
       grade: fromJS(4)
     });
   };
