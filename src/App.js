@@ -144,18 +144,6 @@ class AppBar extends Component {
             App
           </Typography>
           <div className={classes.grow}/>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-                <SearchIcon />
-            </div>
-            <Input
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
         </Toolbar>
       </MaterialAppBar>
     );
