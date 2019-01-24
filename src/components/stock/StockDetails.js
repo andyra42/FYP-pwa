@@ -8,6 +8,8 @@ class StockDetails extends Component {
     return (
       <div>
         <h1>{stock.name} ({stock.code})</h1>
+        <h2>{stock.sector}</h2>
+        <h3>{stock.description}</h3>
       </div>
     );
   }
