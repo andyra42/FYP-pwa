@@ -5,7 +5,7 @@ import immutableToJsComponent from '../immutableToJsComponent';
 class StockPriceChart extends Component {
 
   render() {
-    const {prices, predictions, models, timeInterval, upper, lower} = this.props;
+    const {prices, predictions, models, timeInterval, upper, lower, snakes} = this.props;
 
     let data = prices;
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
@@ -15,13 +15,19 @@ class StockPriceChart extends Component {
       // Append the nulls
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < predictions.length; j++) {
-          data[i].push(null, null, null);
+          for (let k=0; k < (3 + snakes[0].length); k++) //prepare how many series of data to be plotted  
+          {
+            data[i].push(null);
+          }
         }
       }
 
       let row = [data[0][0], null];
       for (let i = 0; i < predictions.length; i++) {
-        row.push(data[0][1], data[0][1], data[0][1]);
+        for (let j = 0; j < (3 + snakes[0].length); j++) //prepare how many series of data to be plotted 
+        {
+          row.push(data[0][1]);
+        } 
       }
 
       // initial point for the predictions
@@ -32,6 +38,10 @@ class StockPriceChart extends Component {
         let row = [new Date(lastDateTimestamp + (i + 1) * 86400000), null];
         for (let j = 0; j < predictions.length; j++) {
           row.push(predictions[j][i], upper[j][i], lower[j][i]);
+          for (let k = 0; k < snakes[0].length; k++)
+          {
+            row.push(null);
+          }
         }
         data.push(row);
       }
@@ -40,8 +50,25 @@ class StockPriceChart extends Component {
         columns.push(
           ['number', models[i].modelName],
           ['number', models[i].modelName + ' Upper Bound'],
-          ['number', models[i].modelName + ' Lower Bound']
+          ['number', models[i].modelName + ' Lower Bound'],
+
         );
+        for (let j = 0; j < snakes[0].length; j++)
+        {
+          columns.push(['number', models[i].modelName + ' snake no. '+ (1+j)]);
+        }
+      }
+    }
+
+    //Put snakes values into 'snakes' columns in chart
+    for (let modelIdx = 0; modelIdx < predictions.length; modelIdx++){
+      let totalNumOfSnakesVal = snakes[modelIdx].length * snakes[modelIdx][0].length
+      for (let snakeIdx = 0; snakeIdx < snakes[modelIdx].length; snakeIdx++)
+      {
+        for (let valueIdx = 0; valueIdx < snakes[modelIdx][0].length; valueIdx++)
+        {
+          data[(0 + totalNumOfSnakesVal) - (snakeIdx*snakes[modelIdx].length) -valueIdx][5+modelIdx*13+snakeIdx] = snakes[modelIdx][snakeIdx][valueIdx];
+        }
       }
     }
 

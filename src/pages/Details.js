@@ -12,7 +12,8 @@ const mapStateToProps = (state, ownProps) => ({
   models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null),
   grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null),
   upper: state.getIn(['stock', 'upper', ownProps.match.params.stockCode], null),
-  lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null)
+  lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
+  snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -105,7 +106,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {stock, stockPrices, predictions, models, grade, classes, upper, lower} = this.props;
+    const {stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes} = this.props;
 
     return (
       <div>
@@ -122,6 +123,7 @@ class DetailsPage extends Component {
               timeInterval={this.state.timeInterval}
               upper={upper.filter((upper, index) => this.state.modelIndex.indexOf(index) !== -1)}
               lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
               className={classes.stockPriceChart} />
             <StockTimeFrame
               onTimeFrameClick={this.onTimeFrameClick} />
