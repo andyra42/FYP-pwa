@@ -45,7 +45,7 @@ class DetailsPage extends Component {
 
   onTimeFrameClick = (timeFrameStr) => {
     const {prices, predictions, models} = this.props;
-    
+
     let timeInterval = moment();
 
     switch(timeFrameStr) {
@@ -72,12 +72,12 @@ class DetailsPage extends Component {
     }
     this.setState({timeInterval: timeInterval.toDate()});
     console.log(this.state)
-  } 
-  
+  }
+
   onModelClick = (modelIndex) => {
     this.setState((state) => {
       let i = state.modelIndex.indexOf(modelIndex);
-      
+
       if (i === -1) {
         state.modelIndex.push(modelIndex);
         return {modelIndex: state.modelIndex};
@@ -86,6 +86,10 @@ class DetailsPage extends Component {
         return {modelIndex: state.modelIndex};
       }
     });
+  }
+
+  onModelDetailsClick = (modelIdx) => {
+    this.props.history.push(`/modelDetails/${this.props.match.params.stockCode}/${modelIdx}`);
   }
 
   componentDidMount() {
@@ -135,6 +139,7 @@ class DetailsPage extends Component {
             models={models}
             onModelClick={this.onModelClick}
             selected={this.state.modelIndex}
+            onModelDetailsClick={this.onModelDetailsClick}
             className={classes.stockModelList} />
         }
       </div>
