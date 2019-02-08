@@ -72,6 +72,26 @@ class StockPriceChart extends Component {
       }
     }
 
+    //Push options for dashed lines and color mod
+    let series = [
+      // {},
+      {color: 'blue'}
+    ];
+
+    let colorOptions = ['#0B66B2', '#FFA10E', '#14E84E', '#E614E8', '#FFE62D', '#3EBCE8', '#E8623D', '#FFE045', '#77FF5A', '#AC34FF']
+    for (let modelIdx = 0; modelIdx < predictions.length; modelIdx++){
+      let modelColor = colorOptions[modelIdx%colorOptions.length];
+      series.push({color: modelColor});
+      series.push({color: modelColor, lineDashStyle: [4,1]});
+      series.push({color: modelColor, lineDashStyle: [4,1]});
+      for (let snakeIdx = 0; snakeIdx < snakes[modelIdx].length; snakeIdx++)
+      {
+        series.push({color: modelColor, lineDashStyle: [4,4]});
+      }
+    }
+
+    console.log(data)
+
     const options = {
       chart: {
         title: 'Stock Price'
@@ -86,7 +106,8 @@ class StockPriceChart extends Component {
         gridlines: {
           color: 'transparent'
         }
-      }
+      },
+      series: series
     };
 
     return (
