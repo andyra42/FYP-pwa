@@ -13,7 +13,7 @@ import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details} from './pages';
+import {Home, Details, ModelDetails} from './pages';
 import {connect} from 'react-redux';
 import {updateUser} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -44,7 +44,7 @@ const styles = theme => ({
   },
   root: {
     display: 'flex',
-    height: '100%',
+    minHeight: '100%',
     width: '100%'
   },
   appBar: {
@@ -250,6 +250,9 @@ class App extends Component {
               <Route
                 path="/stockDetails/:stockCode"
                 render={(props) => <Details {...props} setLoading={this.setLoading} />} />
+              <Route
+                path="/modelDetails/:stockCode/:modelIdx"
+                render={(props) => <ModelDetails {...props} setLoading={this.setLoading} />} />
             </main>
           </div>
         </Router>

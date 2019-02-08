@@ -7,13 +7,13 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 class StockModelList extends Component {
   render() {
-    const {models, onModelClick, selected} = this.props;
+    const {models, onModelClick, selected, onModelDetailsClick} = this.props;
 
     return (
       <List>
         {models.map((model, i) => (
           <ListItem
-            key={model.modelName}
+            key={i}
             dense
             button
             onClick={() => onModelClick(i)}
@@ -23,7 +23,7 @@ class StockModelList extends Component {
               tabIndex={-1}
               disableRipple
             />
-            <ListItemText primary={model.modelName}></ListItemText>
+            <ListItemText><u onClick={() => onModelDetailsClick(i)}>{model.modelName}</u></ListItemText>
           </ListItem>
         ))}
       </List>
