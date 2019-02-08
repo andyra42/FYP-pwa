@@ -6,7 +6,9 @@ const INITIAL_STATE = fromJS({
   stockDetails: {},
   stockPrices: {},
   models: {},
-  predictions: {}
+  predictions: {},
+  upper: {},
+  lower: {}
 });
 
 const stock = (state=INITIAL_STATE, action) => {
@@ -21,7 +23,9 @@ const stock = (state=INITIAL_STATE, action) => {
       return state
           .setIn(['predictions', action.stockCode], action.predictions)
           .setIn(['models', action.stockCode], action.models)
-          .setIn(['grade', action.stockCode], action.grade);
+          .setIn(['grade', action.stockCode], action.grade)
+          .setIn(['upper', action.stockCode], action.upper)
+          .setIn(['lower', action.stockCode], action.lower);
     default:
       return state;
   }
