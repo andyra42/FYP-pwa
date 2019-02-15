@@ -108,7 +108,7 @@ class StockDetails extends Component {
         <Grid
           justify="space-between" // Add it here :)
           container 
-          spacing={12}
+          spacing={8}
         >
           <Grid item xs={9}>
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
@@ -117,12 +117,9 @@ class StockDetails extends Component {
                 {/* <Typography className={classes.secondaryHeading}>I am an expansion panel</Typography> */}
               </ExpansionPanelSummary>
               <ExpansionPanelDetails style={{padding:'0'}}>
-                <body2 style={{paddingBottom:'10px'}}>{stock.description}</body2>
+                <Typography variant="body2" style={{paddingBottom:'10px'}}>{stock.description}</Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-            <div>
-              
-            </div>
           </Grid>
 
           <Grid item xs={3}>
