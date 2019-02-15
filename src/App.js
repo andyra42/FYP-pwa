@@ -61,12 +61,17 @@ const styles = theme => ({
       position: 'relative'
     }
   },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    width: '100%'
+  },
   toolbar: theme.mixins.toolbar,
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    height:'100%'
+    padding: theme.spacing.unit * 2
   },
   search: {
     position: 'relative',
@@ -242,7 +247,7 @@ class App extends Component {
                 {drawer}
               </Drawer>
             </Hidden>
-            <div style={{width:'100%'}}>
+            <div className={classes.container}>
               <div className={classes.toolbar} />
                 <main className={classes.content}>
                 <Route
