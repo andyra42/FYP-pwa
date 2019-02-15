@@ -107,6 +107,14 @@ class StockPriceChart extends Component {
           color: 'transparent'
         }
       },
+      legend: {
+        position: 'none'
+      },
+      chartArea: {
+         width: "80%", 
+         height: "65%",
+         
+      },
       series: series
     };
 
