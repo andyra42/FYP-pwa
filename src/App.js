@@ -65,7 +65,8 @@ const styles = theme => ({
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    height:'100%'
   },
   search: {
     position: 'relative',
@@ -241,20 +242,22 @@ class App extends Component {
                 {drawer}
               </Drawer>
             </Hidden>
-            <main className={classes.content}>
+            <div style={{width:'100%'}}>
               <div className={classes.toolbar} />
-              <Route
-                path="/"
-                exact
-                render={(props) => <Home {...props} setLoading={this.setLoading} />} />
-              <Route
-                path="/stockDetails/:stockCode"
-                render={(props) => <Details {...props} setLoading={this.setLoading} />} />
-              <Route
-                path="/modelDetails/:stockCode/:modelIdx"
-                render={(props) => <ModelDetails {...props} setLoading={this.setLoading} />} />
-            </main>
-          </div>
+                <main className={classes.content}>
+                <Route
+                  path="/"
+                  exact
+                  render={(props) => <Home {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/stockDetails/:stockCode"
+                  render={(props) => <Details {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/modelDetails/:stockCode/:modelIdx"
+                  render={(props) => <ModelDetails {...props} setLoading={this.setLoading} />} />
+                </main>
+              </div>
+            </div>
         </Router>
       </div>
     );
