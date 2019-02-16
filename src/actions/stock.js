@@ -100,7 +100,7 @@ export const getPredictions = (stockCode) => {
       stockCode: stockCode,
       predictions: fromJS(predictions.predictions),
       models: fromJS(predictions.models),
-      grade: fromJS(0.84)
+      grade: fromJS(predictions.grade)
     });
   };
 };
