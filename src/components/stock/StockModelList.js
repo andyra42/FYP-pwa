@@ -56,8 +56,8 @@ class StockModelList extends Component {
           <TableRow>
             <TableCell></TableCell>
             <TableCell align="right">Model</TableCell>
-            <TableCell align="right">Score</TableCell>
-            <TableCell align="right">Prediction</TableCell>
+            <TableCell style={{textAlign: 'center'}}>Score</TableCell>
+            <TableCell style={{textAlign: 'center'}}>Prediction</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -73,16 +73,16 @@ class StockModelList extends Component {
               <TableCell component="th" scope="row">
                 {model.modelName}
               </TableCell>
-              <TableCell align="right">{model.score.toFixed(2)}</TableCell>
+              <TableCell style={{textAlign: 'center'}}>{model.score.toFixed(2)*10}</TableCell>
               {
-                model.direction == 1 &&
-                <TableCell style={{ color: 'green' }}>
+                model.direction === 1 &&
+                <TableCell style={{ color: 'green', textAlign: 'center' }}>
                   <ArrowUpwardIcon />
                 </TableCell>
               }
               {
-                model.direction == 0 &&
-                <TableCell style={{ color: 'red' }}>
+                model.direction === -1 &&
+                <TableCell style={{ color: 'red', textAlign: 'center' }}>
                   <ArrowDownwardIcon />
                 </TableCell>
               }
