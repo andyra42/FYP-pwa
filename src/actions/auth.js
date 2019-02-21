@@ -25,3 +25,21 @@ export const getUserProfile = uid => {
     }
   };
 }
+
+export const updateUserProfile = (userProfile) => {
+  return (dispatch, getState) => {
+    let state = getState();
+    const uid = state.getIn(['auth', 'uid'], null);
+    
+    if (uid !== null){
+      var docRef = firebase.firestore().collection('users').doc(uid);
+
+      return docRef.update(userProfile).then(() => {
+        dispatch({
+          type: 'GET_USER_PROFILE',
+          userProfile: userProfile //put result to reducer
+        });
+      });
+    }
+  }
+}

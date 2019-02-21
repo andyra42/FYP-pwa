@@ -2,7 +2,7 @@ import {fromJS} from 'immutable';
 
 const INITIAL_STATE = fromJS({
   uid: null,
-  userProfile: null
+  userProfile: {}
 });
 
 const auth = (state=INITIAL_STATE, action) => {
@@ -14,7 +14,7 @@ const auth = (state=INITIAL_STATE, action) => {
         return state.set('uid', null);
       }
     case 'GET_USER_PROFILE':
-      return state.set('userProfile', action.userProfile);
+      return state.mergeIn(['userProfile'], action.userProfile);
     default:
       return state;
   }

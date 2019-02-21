@@ -10,11 +10,18 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExitToApp from '@material-ui/icons/ExitToApp';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HomeIcon from '@material-ui/icons/Home';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details, ModelDetails} from './pages';
+import {Home, Details, ModelDetails, Settings} from './pages';
 import {connect} from 'react-redux';
 import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -171,6 +178,68 @@ class AppBar extends Component {
 }
 AppBar = withRouter(AppBar);
 
+class AppDrawer extends Component {
+  onDrawerBtnClick = (link) => {
+    this.props.history.push(link);
+    if (this.props.device === 'mobile') {
+      this.props.mobileDrawerToggle();
+    }
+  };
+  
+  render(){
+    const {device, classes} = this.props;
+
+    console.log(this.props);
+
+    const drawer = (
+      <div>
+        <div className={classes.toolbar} />
+        <Divider />
+        <List>
+          <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')}>
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary={'Home'} />
+          </ListItem>
+          <ListItem button key={'Settings'} onClick={() => this.onDrawerBtnClick('/settings')}>
+            <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemText primary={'Settings'} />
+          </ListItem>
+        </List>
+      </div>
+    );
+
+    if (device === 'mobile') {
+      return (
+        <Drawer
+          variant="temporary"
+          open={this.props.mobileOpenStatus}
+          onClose={this.props.mobileDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          ModalProps={{
+            keepMounted: true
+          }}
+        >
+          {drawer}
+        </Drawer>
+      );
+    } else {
+      return (
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
+          {drawer}
+        </Drawer>
+      );
+    }
+  }
+}
+AppDrawer = withRouter(AppDrawer);
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -247,7 +316,12 @@ class App extends Component {
           <div className={classes.root}>
             <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} onLogoutBtnClick={this.onLogoutBtnClick} loading={this.state.loading} classes={classes} />
             <Hidden mdUp>
-              <Drawer
+              <AppDrawer
+                mobileOpenStatus={this.state.mobileDrawerOpen}
+                mobileDrawerToggle={this.onMobileDrawerToggle}
+                device="mobile"
+                classes={classes} />
+              {/* <Drawer
                 variant="temporary"
                 open={this.state.mobileDrawerOpen}
                 onClose={this.onMobileDrawerToggle}
@@ -259,17 +333,21 @@ class App extends Component {
                 }}
               >
                 {drawer}
-              </Drawer>
+              </Drawer> */}
             </Hidden>
             <Hidden smDown>
-              <Drawer
+              <AppDrawer
+                device="desktop"
+                classes={classes} />
+              {/* <Drawer
                 variant="permanent"
                 classes={{
                   paper: classes.drawerPaper
                 }}
               >
                 {drawer}
-              </Drawer>
+              </Drawer> */}
+              
             </Hidden>
             <div className={classes.container}>
               <div className={classes.toolbar} />
@@ -278,6 +356,9 @@ class App extends Component {
                   path="/"
                   exact
                   render={(props) => <Home {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/settings"
+                  render={(props) => <Settings {...props} setLoading={this.setLoading} />} />
                 <Route
                   path="/stockDetails/:stockCode"
                   render={(props) => <Details {...props} setLoading={this.setLoading} />} />
