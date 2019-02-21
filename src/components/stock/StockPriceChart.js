@@ -5,11 +5,11 @@ import immutableToJsComponent from '../immutableToJsComponent';
 class StockPriceChart extends Component {
 
   render() {
-    const {prices, predictions, models, timeInterval, upper, lower, snakes} = this.props;
+    const {advancedUser, prices, predictions, models, timeInterval, upper, lower, snakes} = this.props;
 
     let data = prices;
     let columns = [['date', 'Date'], ['number', 'Stock Price']];
-
+    
     // Append the predictions to the data
     if (predictions && predictions[0]) {
       // Append the nulls
@@ -60,14 +60,26 @@ class StockPriceChart extends Component {
       }
     }
 
-    //Put snakes values into 'snakes' columns in chart
-    for (let modelIdx = 0; modelIdx < predictions.length; modelIdx++){
-      let totalNumOfSnakesVal = snakes[modelIdx].length * snakes[modelIdx][0].length
-      for (let snakeIdx = 0; snakeIdx < snakes[modelIdx].length; snakeIdx++)
-      {
-        for (let valueIdx = 0; valueIdx < snakes[modelIdx][0].length; valueIdx++)
+    if (advancedUser !== false) {
+      //Put snakes values into 'snakes' columns in chart
+      for (let modelIdx = 0; modelIdx < predictions.length; modelIdx++){
+        let totalNumOfSnakesVal = snakes[modelIdx].length * snakes[modelIdx][0].length
+        for (let snakeIdx = 0; snakeIdx < snakes[modelIdx].length; snakeIdx++)
         {
-          data[(0 + totalNumOfSnakesVal) - (snakeIdx*snakes[modelIdx].length) -valueIdx][5+modelIdx*13+snakeIdx] = snakes[modelIdx][snakeIdx][valueIdx];
+          for (let valueIdx = 0; valueIdx < snakes[modelIdx][0].length; valueIdx++)
+          {
+            data[(0 + totalNumOfSnakesVal) - (snakeIdx*snakes[modelIdx].length) -valueIdx][5+modelIdx*13+snakeIdx] = snakes[modelIdx][snakeIdx][valueIdx];
+          }
+        }
+      }
+    } else {
+      for (let modelIdx = 0; modelIdx < predictions.length; modelIdx++){
+        for (let snakeIdx = 0; snakeIdx < snakes[modelIdx].length; snakeIdx++)
+        {
+          for (let valueIdx = 0; valueIdx < snakes[modelIdx][0].length; valueIdx++)
+          {
+            snakes[modelIdx][snakeIdx][valueIdx] = null;
+          }
         }
       }
     }

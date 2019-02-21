@@ -6,6 +6,7 @@ import {getStock, getStockPrices, getPredictions} from '../actions/stock';
 import moment from 'moment';
 
 const mapStateToProps = (state, ownProps) => ({
+  advancedUser: state.getIn(['auth', 'userProfile', 'advanced'], false),
   stock: state.get('stock').get('stockDetails'),
   stockPrices: state.get('stock').get('stockPrices').get(ownProps.match.params.stockCode, null),
   predictions: state.getIn(['stock', 'predictions', ownProps.match.params.stockCode], null),
@@ -106,8 +107,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes} = this.props;
-
+    const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes} = this.props;
     return (
       <div>
         <StockDetails stock={stock} />
@@ -117,6 +117,7 @@ class DetailsPage extends Component {
           models &&
           <div>
             <StockPriceChart
+              advancedUser={advancedUser}
               prices={stockPrices}
               predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
               models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
