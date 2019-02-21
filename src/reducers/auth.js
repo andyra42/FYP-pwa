@@ -1,6 +1,9 @@
 import {fromJS} from 'immutable';
 
-const INITIAL_STATE = fromJS({uid: null});
+const INITIAL_STATE = fromJS({
+  uid: null,
+  userProfile: null
+});
 
 const auth = (state=INITIAL_STATE, action) => {
   switch (action.type) {
@@ -10,6 +13,8 @@ const auth = (state=INITIAL_STATE, action) => {
       } else {
         return state.set('uid', null);
       }
+    case 'GET_USER_PROFILE':
+      return state.set('userProfile', action.userProfile);
     default:
       return state;
   }

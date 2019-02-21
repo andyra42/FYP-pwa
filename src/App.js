@@ -15,7 +15,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
 import {Home, Details, ModelDetails} from './pages';
 import {connect} from 'react-redux';
-import {updateUser} from './actions/auth';
+import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Input from '@material-ui/core/Input';
 import firebase from 'firebase';
@@ -25,11 +25,13 @@ const google = window.google;
 google.charts.load('current', {packages: ['corechart']});
 
 const mapStateToProps = state => ({
-  uid: state.get('auth').get('uid')
+  uid: state.get('auth').get('uid'),
+  userProfile: state.get('auth').get('userProfile')
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: user => {dispatch(updateUser(user))}
+  updateUser: user => {dispatch(updateUser(user))},
+  getUserProfile: uid => {dispatch(getUserProfile(uid))}
 });
 
 const drawerWidth = 240;
@@ -189,6 +191,13 @@ class App extends Component {
   componentDidMount() {
     this.unsubscribeAuthChanged = firebase.auth().onAuthStateChanged(user => {
       this.props.updateUser(user);
+
+      if (user) {
+        const uid = user.uid;
+        this.props.getUserProfile(uid);
+      } else {
+        this.props.getUserProfile(null);
+      }
     });
 
     google.charts.setOnLoadCallback(this.onGoogleChartsLoaded);
