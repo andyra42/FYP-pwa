@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
@@ -121,7 +122,7 @@ const styles = theme => ({
 
 class AppBar extends Component {
   render() {
-    const {onMobileDrawerToggle, history, location, loading, classes} = this.props;
+    const {onMobileDrawerToggle, onLogoutBtnClick, history, location, loading, classes} = this.props;
 
     let appBarIcon;
     if (location.pathname === '/') {
@@ -153,6 +154,15 @@ class AppBar extends Component {
             App
           </Typography>
           <div className={classes.grow}/>
+          {
+            location.pathname === '/' &&
+            <IconButton
+              color="inherit"
+              onClick={onLogoutBtnClick}
+            >
+              <ExitToApp />
+            </IconButton>
+          }
         </Toolbar>
         {loading && <LinearProgress color="secondary" />}
       </MaterialAppBar>
@@ -173,7 +183,12 @@ class App extends Component {
   }
 
   onSignInAnonymouslyClick = () => {
-    firebase.auth().signInAnonymously();
+    var provider = new firebase.auth.FacebookAuthProvider();
+    firebase.auth().signInWithPopup(provider);
+  };
+
+  onLogoutBtnClick = () => {
+    firebase.auth().signOut();
   };
 
   onGoogleChartsLoaded = () => {
@@ -217,7 +232,7 @@ class App extends Component {
     if (!uid) {
       return (
         <div className={classes.loginRoot}>
-          <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
+          <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Using Facebook</Button>
         </div>
       );
     }
@@ -230,7 +245,7 @@ class App extends Component {
       <div className={classes.root}>
         <Router>
           <div className={classes.root}>
-            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} loading={this.state.loading} classes={classes} />
+            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} onLogoutBtnClick={this.onLogoutBtnClick} loading={this.state.loading} classes={classes} />
             <Hidden mdUp>
               <Drawer
                 variant="temporary"
