@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import {fromJS} from 'immutable';
 
 export const updateUser = user => ({
   type: 'UPDATE_USER',
@@ -13,7 +14,7 @@ export const getUserProfile = uid => {
       return docRef.get().then((doc) => {
         dispatch({
           type: 'GET_USER_PROFILE',
-          userProfile: doc.data()
+          userProfile: fromJS(doc.data())
         });
       });
     } else {
