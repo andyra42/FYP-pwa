@@ -12,6 +12,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
 import HomeIcon from '@material-ui/icons/Home';
+import FavouriteIcon from '@material-ui/icons/Favorite';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -21,7 +22,7 @@ import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details, ModelDetails, Settings} from './pages';
+import {Home, Details, ModelDetails, Settings, Favourite} from './pages';
 import {connect} from 'react-redux';
 import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -179,6 +180,18 @@ class AppBar extends Component {
 AppBar = withRouter(AppBar);
 
 class AppDrawer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedIndex: 1
+    }
+  }
+
+  handleListItemClick = () => {
+    console.log('test');
+  }
+  
   onDrawerBtnClick = (link) => {
     this.props.history.push(link);
     if (this.props.device === 'mobile') {
@@ -187,18 +200,35 @@ class AppDrawer extends Component {
   };
   
   render(){
-    const {device, classes} = this.props;
+    const {device, classes, location} = this.props;
 
-    console.log(this.props);
+    // let HomeIcon;
+    // if (location.pathname === '/') {
+    //   HomeIcon =
+    //     <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')} disabled={true}>
+    //       <ListItemIcon><HomeIcon /></ListItemIcon>
+    //       <ListItemText primary={'Home'} />
+    //     </ListItem>;
+    // } else {
+    //   HomeIcon =
+    //     <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')}>
+    //       <ListItemIcon><HomeIcon /></ListItemIcon>
+    //       <ListItemText primary={'Home'} />
+    //     </ListItem>;
+    // }
 
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
-        <List>
+        <List component="nav">
           <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')}>
             <ListItemIcon><HomeIcon /></ListItemIcon>
             <ListItemText primary={'Home'} />
+          </ListItem>
+          <ListItem button key={'Favourite'} onClick={() => this.onDrawerBtnClick('/favourite')}>
+            <ListItemIcon><FavouriteIcon /></ListItemIcon>
+            <ListItemText primary={'Favourite'} />
           </ListItem>
           <ListItem button key={'Settings'} onClick={() => this.onDrawerBtnClick('/settings')}>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
@@ -356,6 +386,9 @@ class App extends Component {
                   path="/"
                   exact
                   render={(props) => <Home {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/favourite"
+                  render={(props) => <Favourite {...props} setLoading={this.setLoading} />} />
                 <Route
                   path="/settings"
                   render={(props) => <Settings {...props} setLoading={this.setLoading} />} />
