@@ -193,7 +193,11 @@ class AppDrawer extends Component {
   }
   
   onDrawerBtnClick = (link) => {
-    this.props.history.push(link);
+    if (this.props.location.pathname !== (link))
+    {
+      this.props.history.push(link);
+    }
+    
     if (this.props.device === 'mobile') {
       this.props.mobileDrawerToggle();
     }
