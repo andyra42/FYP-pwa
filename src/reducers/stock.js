@@ -9,7 +9,8 @@ const INITIAL_STATE = fromJS({
   predictions: {},
   upper: {},
   lower: {},
-  snakes: {}
+  snakes: {},
+  rollingPredict: {}
 });
 
 const stock = (state=INITIAL_STATE, action) => {
@@ -27,7 +28,8 @@ const stock = (state=INITIAL_STATE, action) => {
           .setIn(['grade', action.stockCode], action.grade)
           .setIn(['upper', action.stockCode], action.upper)
           .setIn(['lower', action.stockCode], action.lower)
-          .setIn(['snakes', action.stockCode], action.snakes);
+          .setIn(['snakes', action.stockCode], action.snakes)
+          .setIn(['rollingPredict', action.stockCode], action.rollingPredict);
     default:
       return state;
   }

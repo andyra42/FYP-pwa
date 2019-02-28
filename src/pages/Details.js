@@ -14,7 +14,8 @@ const mapStateToProps = (state, ownProps) => ({
   grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null),
   upper: state.getIn(['stock', 'upper', ownProps.match.params.stockCode], null),
   lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
-  snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null)
+  snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null),
+  rollingPredict: state.getIn(['stock', 'rollingPredict', ownProps.match.params.stockCode], null)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -107,7 +108,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes} = this.props;
+    const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes, rollingPredict} = this.props;
     return (
       <div>
         <StockDetails stock={stock} />
@@ -125,6 +126,7 @@ class DetailsPage extends Component {
               upper={upper.filter((upper, index) => this.state.modelIndex.indexOf(index) !== -1)}
               lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
               snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
               className={classes.stockPriceChart} />
             <StockTimeFrame
               onTimeFrameClick={this.onTimeFrameClick} />
