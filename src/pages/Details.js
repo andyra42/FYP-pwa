@@ -6,11 +6,16 @@ import {getStock, getStockPrices, getPredictions} from '../actions/stock';
 import moment from 'moment';
 
 const mapStateToProps = (state, ownProps) => ({
+  advancedUser: state.getIn(['auth', 'userProfile', 'advanced'], false),
   stock: state.get('stock').get('stockDetails'),
   stockPrices: state.get('stock').get('stockPrices').get(ownProps.match.params.stockCode, null),
   predictions: state.getIn(['stock', 'predictions', ownProps.match.params.stockCode], null),
   models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null),
-  grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null)
+  grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null),
+  upper: state.getIn(['stock', 'upper', ownProps.match.params.stockCode], null),
+  lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
+  snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null),
+  rollingPredict: state.getIn(['stock', 'rollingPredict', ownProps.match.params.stockCode], null)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -43,7 +48,7 @@ class DetailsPage extends Component {
 
   onTimeFrameClick = (timeFrameStr) => {
     const {prices, predictions, models} = this.props;
-    
+
     let timeInterval = moment();
 
     switch(timeFrameStr) {
@@ -70,12 +75,12 @@ class DetailsPage extends Component {
     }
     this.setState({timeInterval: timeInterval.toDate()});
     console.log(this.state)
-  } 
-  
+  }
+
   onModelClick = (modelIndex) => {
     this.setState((state) => {
       let i = state.modelIndex.indexOf(modelIndex);
-      
+
       if (i === -1) {
         state.modelIndex.push(modelIndex);
         return {modelIndex: state.modelIndex};
@@ -84,6 +89,10 @@ class DetailsPage extends Component {
         return {modelIndex: state.modelIndex};
       }
     });
+  }
+
+  onModelDetailsClick = (modelIdx) => {
+    this.props.history.push(`/modelDetails/${this.props.match.params.stockCode}/${modelIdx}`);
   }
 
   componentDidMount() {
@@ -99,8 +108,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {stock, stockPrices, predictions, models, grade, classes} = this.props;
-
+    const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes, rollingPredict} = this.props;
     return (
       <div>
         <StockDetails stock={stock} />
@@ -110,10 +118,15 @@ class DetailsPage extends Component {
           models &&
           <div>
             <StockPriceChart
+              advancedUser={advancedUser}
               prices={stockPrices}
               predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
               models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
               timeInterval={this.state.timeInterval}
+              upper={upper.filter((upper, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
+              rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
               className={classes.stockPriceChart} />
             <StockTimeFrame
               onTimeFrameClick={this.onTimeFrameClick} />
@@ -131,6 +144,7 @@ class DetailsPage extends Component {
             models={models}
             onModelClick={this.onModelClick}
             selected={this.state.modelIndex}
+            onModelDetailsClick={this.onModelDetailsClick}
             className={classes.stockModelList} />
         }
       </div>

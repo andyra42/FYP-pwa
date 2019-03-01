@@ -6,30 +6,44 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import SvgIcon from '@material-ui/core/SvgIcon';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HomeIcon from '@material-ui/icons/Home';
+import FavouriteIcon from '@material-ui/icons/Favorite';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details} from './pages';
+import {Home, Details, ModelDetails, Settings, Favourite} from './pages';
 import {connect} from 'react-redux';
-import {updateUser} from './actions/auth';
+import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Input from '@material-ui/core/Input';
 import firebase from 'firebase';
 import './App.css';
+import { Transform } from 'stream';
 
 const google = window.google;
 google.charts.load('current', {packages: ['corechart']});
 
 const mapStateToProps = state => ({
-  uid: state.get('auth').get('uid')
+  uid: state.get('auth').get('uid'),
+  userProfile: state.get('auth').get('userProfile')
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateUser: user => {dispatch(updateUser(user))}
+  updateUser: user => {dispatch(updateUser(user))},
+  getUserProfile: uid => {dispatch(getUserProfile(uid))}
 });
 
 const drawerWidth = 240;
@@ -40,11 +54,30 @@ const styles = theme => ({
     display: 'flex',
     height: '100%',
     justifyContent: 'center',
-    width: '100%'
+    marginLeft: '50px',
+    marginRight: '50px'
+    // width: '100%'
+  },
+  loginIcons:{
+    transform:'scale(1.8)',
+    position: 'absolute',
+    top:'0px'
+  },
+  loginOptionContainer:{
+    position:'relative',
+    height: '150px',
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    marginLeft: '50px',
+    marginRight: '50px'
+  },
+  loginOption:{
+    position:'absolute'
   },
   root: {
     display: 'flex',
-    height: '100%',
+    minHeight: '100%',
     width: '100%'
   },
   appBar: {
@@ -61,11 +94,17 @@ const styles = theme => ({
       position: 'relative'
     }
   },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    width: '100%'
+  },
   toolbar: theme.mixins.toolbar,
   content: {
     backgroundColor: theme.palette.background.default,
     flexGrow: 1,
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 2
   },
   search: {
     position: 'relative',
@@ -113,7 +152,7 @@ const styles = theme => ({
 
 class AppBar extends Component {
   render() {
-    const {onMobileDrawerToggle, history, location, loading, classes} = this.props;
+    const {onMobileDrawerToggle, onLogoutBtnClick, history, location, loading, classes} = this.props;
 
     let appBarIcon;
     if (location.pathname === '/') {
@@ -145,6 +184,15 @@ class AppBar extends Component {
             App
           </Typography>
           <div className={classes.grow}/>
+          {
+            location.pathname === '/' &&
+            <IconButton
+              color="inherit"
+              onClick={onLogoutBtnClick}
+            >
+              <ExitToApp />
+            </IconButton>
+          }
         </Toolbar>
         {loading && <LinearProgress color="secondary" />}
       </MaterialAppBar>
@@ -152,6 +200,115 @@ class AppBar extends Component {
   }
 }
 AppBar = withRouter(AppBar);
+
+class AppDrawer extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedIndex: 1
+    }
+  }
+
+  handleListItemClick = () => {
+    console.log('test');
+  }
+  
+  onDrawerBtnClick = (link) => {
+    if (this.props.location.pathname !== (link))
+    {
+      this.props.history.push(link);
+    }
+    
+    if (this.props.device === 'mobile') {
+      this.props.mobileDrawerToggle();
+    }
+  };
+  
+  render(){
+    const {device, classes, location} = this.props;
+
+    // let HomeIcon;
+    // if (location.pathname === '/') {
+    //   HomeIcon =
+    //     <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')} disabled={true}>
+    //       <ListItemIcon><HomeIcon /></ListItemIcon>
+    //       <ListItemText primary={'Home'} />
+    //     </ListItem>;
+    // } else {
+    //   HomeIcon =
+    //     <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')}>
+    //       <ListItemIcon><HomeIcon /></ListItemIcon>
+    //       <ListItemText primary={'Home'} />
+    //     </ListItem>;
+    // }
+
+    const drawer = (
+      <div>
+        <div className={classes.toolbar} />
+        <Divider />
+        <List component="nav">
+          <ListItem button key={'Home'} onClick={() => this.onDrawerBtnClick('/')}>
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary={'Home'} />
+          </ListItem>
+          <ListItem button key={'Favourite'} onClick={() => this.onDrawerBtnClick('/favourite')}>
+            <ListItemIcon><FavouriteIcon /></ListItemIcon>
+            <ListItemText primary={'Favourite'} />
+          </ListItem>
+          <ListItem button key={'Settings'} onClick={() => this.onDrawerBtnClick('/settings')}>
+            <ListItemIcon><SettingsIcon /></ListItemIcon>
+            <ListItemText primary={'Settings'} />
+          </ListItem>
+        </List>
+      </div>
+    );
+
+    if (device === 'mobile') {
+      return (
+        <Drawer
+          variant="temporary"
+          open={this.props.mobileOpenStatus}
+          onClose={this.props.mobileDrawerToggle}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          ModalProps={{
+            keepMounted: true
+          }}
+        >
+          {drawer}
+        </Drawer>
+      );
+    } else {
+      return (
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
+          {drawer}
+        </Drawer>
+      );
+    }
+  }
+}
+AppDrawer = withRouter(AppDrawer);
+
+function FacebookIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <g id="Artboard" transform="translate(-137.000000, -47.000000)" fill="#475993" fill-rule="nonzero">
+              <g id="facebook" transform="translate(137.000000, 47.000000)">
+                  <path d="M20.7658696,0 L3.2340717,0 C1.44797877,0 0,1.44790943 0,3.23404797 L0,20.7658346 C0,22.5519731 1.44792006,23.9998826 3.2340717,23.9998826 L11.8806708,23.9998826 L11.8954071,15.423623 L9.66728231,15.423623 C9.37772179,15.423623 9.14270338,15.189487 9.14158788,14.8999286 L9.13090255,12.1354443 C9.12978705,11.8443007 9.36550999,11.6076989 9.6566557,11.6076989 L11.8807295,11.6076989 L11.8807295,8.93650499 C11.8807295,5.83660969 13.7739692,4.14869321 16.5392957,4.14869321 L18.8084592,4.14869321 C19.098783,4.14869321 19.3342124,4.38406215 19.3342124,4.6744425 L19.3342124,7.00546983 C19.3342124,7.29573275 19.0989591,7.53104299 18.8087528,7.53121912 L17.4161968,7.53186493 C15.9123256,7.53186493 15.6211211,8.24648473 15.6211211,9.29522393 L15.6211211,11.6077576 L18.9256455,11.6077576 C19.2405103,11.6077576 19.484805,11.8826971 19.4476999,12.1953873 L19.1200362,14.9598716 C19.0886848,15.2244195 18.8643517,15.4237404 18.5979818,15.4237404 L15.6358575,15.4237404 L15.6211211,24 L20.765987,24 C22.5520799,24 24,22.5520906 24,20.7660107 L24,3.23404797 C23.9999413,1.44790943 22.5520212,0 20.7658696,0 Z" id="Shape"></path>
+              </g>
+          </g>
+      </g>
+    </SvgIcon>
+  );
+}
 
 class App extends Component {
   constructor(props) {
@@ -164,8 +321,18 @@ class App extends Component {
     };
   }
 
+  onSignInFacebookClick = () => {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    firebase.auth().signInWithPopup(provider);
+  };
+
   onSignInAnonymouslyClick = () => {
+    // var provider = new firebase.auth.FacebookAuthProvider();
     firebase.auth().signInAnonymously();
+  };
+
+  onLogoutBtnClick = () => {
+    firebase.auth().signOut();
   };
 
   onGoogleChartsLoaded = () => {
@@ -183,6 +350,13 @@ class App extends Component {
   componentDidMount() {
     this.unsubscribeAuthChanged = firebase.auth().onAuthStateChanged(user => {
       this.props.updateUser(user);
+
+      if (user) {
+        const uid = user.uid;
+        this.props.getUserProfile(uid);
+      } else {
+        this.props.getUserProfile(null);
+      }
     });
 
     google.charts.setOnLoadCallback(this.onGoogleChartsLoaded);
@@ -202,7 +376,14 @@ class App extends Component {
     if (!uid) {
       return (
         <div className={classes.loginRoot}>
-          <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
+          <div className={classes.loginOptionContainer}>
+            <FacebookIcon className={classes.loginIcons}/>
+            <Button onClick={this.onSignInFacebookClick} variant="contained">Sign In Using Facebook</Button>
+          </div>
+          <div className={classes.loginOptionContainer}>
+            <AccountCircleIcon className={classes.loginIcons}/>
+            <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
+          </div>
         </div>
       );
     }
@@ -215,9 +396,14 @@ class App extends Component {
       <div className={classes.root}>
         <Router>
           <div className={classes.root}>
-            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} loading={this.state.loading} classes={classes} />
+            <AppBar onMobileDrawerToggle={this.onMobileDrawerToggle} onLogoutBtnClick={this.onLogoutBtnClick} loading={this.state.loading} classes={classes} />
             <Hidden mdUp>
-              <Drawer
+              <AppDrawer
+                mobileOpenStatus={this.state.mobileDrawerOpen}
+                mobileDrawerToggle={this.onMobileDrawerToggle}
+                device="mobile"
+                classes={classes} />
+              {/* <Drawer
                 variant="temporary"
                 open={this.state.mobileDrawerOpen}
                 onClose={this.onMobileDrawerToggle}
@@ -229,29 +415,44 @@ class App extends Component {
                 }}
               >
                 {drawer}
-              </Drawer>
+              </Drawer> */}
             </Hidden>
             <Hidden smDown>
-              <Drawer
+              <AppDrawer
+                device="desktop"
+                classes={classes} />
+              {/* <Drawer
                 variant="permanent"
                 classes={{
                   paper: classes.drawerPaper
                 }}
               >
                 {drawer}
-              </Drawer>
+              </Drawer> */}
+              
             </Hidden>
-            <main className={classes.content}>
+            <div className={classes.container}>
               <div className={classes.toolbar} />
-              <Route
-                path="/"
-                exact
-                render={(props) => <Home {...props} setLoading={this.setLoading} />} />
-              <Route
-                path="/stockDetails/:stockCode"
-                render={(props) => <Details {...props} setLoading={this.setLoading} />} />
-            </main>
-          </div>
+                <main className={classes.content}>
+                <Route
+                  path="/"
+                  exact
+                  render={(props) => <Home {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/favourite"
+                  render={(props) => <Favourite {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/settings"
+                  render={(props) => <Settings {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/stockDetails/:stockCode"
+                  render={(props) => <Details {...props} setLoading={this.setLoading} />} />
+                <Route
+                  path="/modelDetails/:stockCode/:modelIdx"
+                  render={(props) => <ModelDetails {...props} setLoading={this.setLoading} />} />
+                </main>
+              </div>
+            </div>
         </Router>
       </div>
     );

@@ -31,25 +31,8 @@ const classes = theme => ({
 
 class StockModelList extends Component {
   render() {
-    let id = 0;
-    function createData(name, calories, fat, carbs, protein) {
-      id += 1;
-      return { id, name, calories, fat, carbs, protein };
-    }
+    const {models, onModelClick, selected, onModelDetailsClick} = this.props;
 
-    const rows = [
-      createData('Frozen yoghurt', 159, 6.0, 24),
-      createData('Ice cream sandwich', 237, 9.0, 37),
-      createData('Eclair', 262, 16.0, 24),
-      createData('Cupcake', 305, 3.7, 67),
-      createData('Gingerbread', 356, 16.0, 49),
-    ];
-    
-    // function onAllModelClick() {
-    //   models
-    // }
-
-    const {models, onModelClick, selected} = this.props;
     return (
       <Table className={classes.table}>
         <TableHead>
@@ -70,8 +53,8 @@ class StockModelList extends Component {
                   disableRipple
                 />
               </TableCell>
-              <TableCell component="th" scope="row">
-                {model.modelName}
+              <TableCell component="th" scope="row" onClick={() => onModelDetailsClick(i)}>
+                <u><b>{model.modelName}</b></u>
               </TableCell>
               <TableCell style={{textAlign: 'center'}}>{model.score.toFixed(2)*10}</TableCell>
               {
@@ -91,39 +74,6 @@ class StockModelList extends Component {
         </TableBody>
       </Table>
     );
-    // return (
-    //   <List>
-    //     {models.map((model, i) => [
-    //       <ListItem
-    //         key={model.modelName}
-    //         dense
-    //         button
-    //         onClick={() => onModelClick(i)}
-    //       >
-    //         <Checkbox
-    //           checked={selected.indexOf(i) !== -1}
-    //           tabIndex={-1}
-    //           disableRipple
-    //         />
-    //         <ListItemText primary={model.modelName}></ListItemText>
-    //         <ListItemText primary={model.score.toFixed(2)}></ListItemText>
-    //         {
-    //           model.direction == 1 && 
-    //           <ListItemIcon style={{ color: 'green' }}>
-    //             <ArrowUpwardIcon />
-    //           </ListItemIcon>
-    //         }
-    //         {
-    //           model.direction == 0 &&
-    //           <ListItemIcon style={{ color: 'red' }}>
-    //             <ArrowDownwardIcon />
-    //           </ListItemIcon>
-    //         }
-    //       </ListItem>,
-    //       <Divider key={i}/>
-    //     ])}
-    //   </List>
-    // );
   }
 }
 

@@ -100,6 +100,10 @@ export const getPredictions = (stockCode) => {
       stockCode: stockCode,
       predictions: fromJS(predictions.predictions),
       models: fromJS(predictions.models),
+      upper: fromJS(predictions.upper),
+      lower: fromJS(predictions.lower),
+      snakes: fromJS(predictions.snakes),
+      rollingPredict: fromJS(predictions.rollingPredict),
       grade: fromJS(predictions.grade)
     });
   };
