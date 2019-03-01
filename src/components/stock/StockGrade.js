@@ -15,9 +15,9 @@ class StockGrade extends Component {
           </defs>
           <text x="0" y="16" fontSize="16" fill="#000">Models' Summary</text>
           <rect width="100%" height="47.5%" y="20" style={{ fill: 'url(#grad1)', strokeWidth: 2, stroke: '#FFFFFF' }} />
-          <rect width="2" height="50%" x={this.props.grade * 97 + 1.5 + '%'} y="20" style={{ fill: '#ffb300' }} />
-          <circle r="8" cx={this.props.grade * 97 + 1.6 + '%'} cy="12" fill='#ffb300' />
-          <circle r="2" cx={this.props.grade * 97 + 1.6 + '%'} cy="12" fill='#fff' />
+          <rect width="2" height="50%" x={(this.props.grade * 0.5 + 0.5) * 97 + 1.5 + '%'} y="20" style={{ fill: '#ffb300' }} />
+          <circle r="8" cx={(this.props.grade * 0.5 + 0.5) * 97 + 1.6 + '%'} cy="12" fill='#ffb300' />
+          <circle r="2" cx={(this.props.grade * 0.5 + 0.5) * 97 + 1.6 + '%'} cy="12" fill='#fff' />
           <text x="0" y="58" fontSize="10" fill="grey">Downtrend</text>
           <text x="100%" y="58" fontSize="10" fill="grey" textAnchor="end">Uptrend</text>
         </svg>
