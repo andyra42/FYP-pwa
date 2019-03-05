@@ -1,15 +1,21 @@
 import React, {Component} from 'react';
+import {Map, OrderedMap} from 'immutable';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
+import Divider from '@material-ui/core/Divider';
 import {StockList} from '../components/stock';
 import {getStocks} from '../actions/stock';
+import {updateUserProfile} from '../actions/auth';
 
 const mapStateToProps = (state) => ({
-  stocks: state.get('stock').get('stocks')
+  stocks: state.get('stock').get('stocks'),
+  stock_access_freq: state.getIn(['auth', 'userProfile', 'stock_access_freq'], Map()),
+  favourites: state.getIn(['auth', 'userProfile', 'favourites'], Map())
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getStocks: () => dispatch(getStocks())
+  getStocks: () => dispatch(getStocks()),
+  updateUserProfile: userProfile => dispatch(updateUserProfile(userProfile))
 });
 
 const styles = () => ({
@@ -20,8 +26,6 @@ const styles = () => ({
 class SearchBar extends React.Component {
   constructor(props) {
     super(props);
-    // this.handleFilterTextChange = this.handleFilterTextChange.bind(this);
-    // this.handleInStockChange = this.handleInStockChange.bind(this);
   }
   
   handleFilterTextChange = (e) => {
@@ -50,35 +54,32 @@ class SearchBar extends React.Component {
 class StockTable extends React.Component {
   
   render() {
-    const filterText = this.props.filterText;
-    const oriStocksList = this.props.stocks;
-    //const filteredStocks=[];
-    const onStockClick = this.props.onStockClick;
+    const { 
+		stocks,
+		filterText, 
+		oriStocksList, 
+		onStockClick, 
+		onAddFavouriteStock,
+		isFavourite
+	} = this.props;
 
-    oriStocksList.map((stock, index) => {
-      console.log("NEW The current iteration is: " + index);
-      console.log("NEW The current element is: " + stock.get('name'));
-      console.log("\n");
-      return 'X';
-    });
-    console.log("NEW filterText: " + filterText)
-
-    const filteredStocks = oriStocksList.filter((stock) => {
+    const filteredStocks = stocks.filter((stock) => {
         return stock.get('name').includes(filterText);
     })
 
-    console.log(filteredStocks)
-
-    console.log("NEW onStockClick: "+ this.props.onStockClick)
-    
     return (
-        <StockList stocks={filteredStocks} onStockClick={this.props.onStockClick} />
+        <StockList 
+		  isFavourite={isFavourite}
+		  stocks={filteredStocks} 
+		  onStockClick={this.props.onStockClick} 
+		  onAddFavouriteStock={this.props.onAddFavouriteStock}
+		/>
     );
   }
 }
 
 
-class FilterableStockTable extends React.Component{
+export class FilterableStockTable extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -96,19 +97,33 @@ class FilterableStockTable extends React.Component{
 
 
   render() {
-    const oriStocksList = this.props.stocks;
-    const onStockClick = this.props.onStockClick;
-    
-    console.table(oriStocksList);
+	const {
+	  stocks,
+	  favourites,
+	  onStockClick,
+	  onAddFavouriteStock,
+	  favouriteOnly,
+	  recent,
+	  recentOnly
+	} = this.props;
 
-    oriStocksList.map((stock, index) => {
-      console.log("The current iteration is: " + index);
-      console.log("The current element is: " + stock.get('name'));
-      console.log("\n");
-      return 'X';
-    });
+	console.log('favourite, ' + favouriteOnly);
 
-    console.log("onStockClick: " + onStockClick);
+	const favouriteStocks = stocks.filter((stock) => {
+	  return favourites.hasIn([stock.get('code')]);
+	});
+
+	const nonFavouriteStocks = stocks.filter((stock) => {
+	  return !favourites.hasIn([stock.get('code')]);
+	});
+	
+	const otherStocks = nonFavouriteStocks.filter((stock) => {
+	  return !recent.hasIn([stock.get('code')]); 
+	});
+	
+	const recentStocks = nonFavouriteStocks.filter((stock) => {
+	  return recent.hasIn([stock.get('code')]);
+	});
 
     return (
 
@@ -118,11 +133,55 @@ class FilterableStockTable extends React.Component{
           onFilterTextChange={this.handleFilterTextChange}
         />
         
-        <StockTable
-          stocks = {this.props.stocks}
-          filterText={this.state.filterText}
-          onStockClick={this.props.onStockClick}
-        />
+		{
+		  !recentOnly &&
+		  favouriteStocks.count() > 0 &&
+		  <React.Fragment>
+		    <h3>Favourites</h3>
+            <StockTable
+			  isFavourite={true}
+              stocks={favouriteStocks}
+              filterText={this.state.filterText}
+              onStockClick={onStockClick}
+		      onAddFavouriteStock={onAddFavouriteStock(false)}
+            />
+		    <Divider />
+		  </React.Fragment>
+	    }	
+
+
+		{
+		  !favouriteOnly &&
+		  recentStocks.count() > 0 &&
+		  <React.Fragment>
+		    <h3>Recent</h3>
+		    <StockTable
+			  isFavourite={false}
+		      stocks={recentStocks}
+		      filterText={this.state.filterText}
+		      onStockClick={onStockClick}
+		      onAddFavouriteStock={onAddFavouriteStock(true)}
+		    />
+			<Divider />
+		  </React.Fragment>
+		}
+
+		{
+		  !favouriteOnly &&
+		  !recentOnly &&
+		  otherStocks.count() > 0 &&
+		  <React.Fragment>
+		    <h3>Others</h3>
+		    <StockTable
+			  isFavourite={false}
+		      stocks={otherStocks}
+		      filterText={this.state.filterText}
+		      onStockClick={onStockClick}
+		      onAddFavouriteStock={onAddFavouriteStock(true)}
+		    />
+		  </React.Fragment>
+		}
+
       </div>
     );
   }
@@ -132,7 +191,31 @@ class FilterableStockTable extends React.Component{
 class HomePage extends Component {
   onStockClick = (stockCode) => {
     this.props.history.push(`/stockDetails/${stockCode}`);
+	
+	// Discount old frequencies to favour newly clicked stocks
+    const discounted = this.props.stock_access_freq.map((freq) =>
+	  freq *= 0.9
+	);
+	this.props.updateUserProfile({
+	  stock_access_freq: discounted.set(stockCode, discounted.get(stockCode, 0) + 1).toJS()
+	});
   };
+
+  onAddFavouriteStock = (isAdd) => {
+	const { favourites } = this.props;
+	if (isAdd) {
+	  return (stockCode) => {
+	    this.props.updateUserProfile({
+		  favourites: favourites.set(stockCode, 1).toJS()
+		});
+      }
+	}
+	return (stockCode) => {
+	  this.props.updateUserProfile({
+		favourites: favourites.removeIn([stockCode]).toJS()
+	  });
+	}
+  }
 
   componentDidMount() {
     this.props.setLoading(true);
@@ -144,10 +227,17 @@ class HomePage extends Component {
 
   render() {
     return (
-        <div>
-            <FilterableStockTable stocks={this.props.stocks} onStockClick={this.onStockClick}/>
-        </div>
-        
+      <div>
+        <FilterableStockTable 
+		  favouriteOnly={this.props.favouriteOnly}
+		  favourites={this.props.favourites}
+		  recentOnly={this.props.recentOnly}
+		  recent={this.props.stock_access_freq.sort((a, b) => b - a).take(5)}
+		  stocks={this.props.stocks} 
+		  onStockClick={this.onStockClick}
+		  onAddFavouriteStock={this.onAddFavouriteStock}
+		/>
+      </div>
     );
   }
 }
