@@ -13,6 +13,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import SettingsIcon from '@material-ui/icons/Settings';
+import HistoryIcon from '@material-ui/icons/History';
 import HomeIcon from '@material-ui/icons/Home';
 import FavouriteIcon from '@material-ui/icons/Favorite';
 import List from '@material-ui/core/List';
@@ -24,7 +25,7 @@ import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details, ModelDetails, Settings, Favourite} from './pages';
+import {Home, Details, ModelDetails, Settings} from './pages';
 import {connect} from 'react-redux';
 import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -256,6 +257,10 @@ class AppDrawer extends Component {
             <ListItemIcon><FavouriteIcon /></ListItemIcon>
             <ListItemText primary={'Favourite'} />
           </ListItem>
+          <ListItem button key={'Recent'} onClick={() => this.onDrawerBtnClick('/recent')}>
+            <ListItemIcon><HistoryIcon/></ListItemIcon>
+            <ListItemText primary={'Recent'} />
+          </ListItem>
           <ListItem button key={'Settings'} onClick={() => this.onDrawerBtnClick('/settings')}>
             <ListItemIcon><SettingsIcon /></ListItemIcon>
             <ListItemText primary={'Settings'} />
@@ -440,7 +445,10 @@ class App extends Component {
                   render={(props) => <Home {...props} setLoading={this.setLoading} />} />
                 <Route
                   path="/favourite"
-                  render={(props) => <Favourite {...props} setLoading={this.setLoading} />} />
+                  render={(props) => <Home {...props} favouriteOnly={true} setLoading={this.setLoading} />} />
+                <Route
+                  path="/recent"
+                  render={(props) => <Home {...props} recentOnly={true} setLoading={this.setLoading} />} />
                 <Route
                   path="/settings"
                   render={(props) => <Settings {...props} setLoading={this.setLoading} />} />
