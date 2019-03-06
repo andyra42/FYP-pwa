@@ -188,6 +188,7 @@ class AppBar extends Component {
           {
             location.pathname === '/' &&
             <IconButton
+			  style={{marginLeft: 'auto'}}
               color="inherit"
               onClick={onLogoutBtnClick}
             >
