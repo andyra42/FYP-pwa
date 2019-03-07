@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {StockDetails, StockPriceChart, StockTimeFrame, StockModelList, StockGrade} from '../components/stock';
+import {StockDetails, StockPriceChart, StockTimeFrame, StockModelList, StockGrade, ChartSettings} from '../components/stock';
 import {getStock, getStockPrices, getPredictions} from '../actions/stock';
+import SettingsIcon from '@material-ui/icons/Settings';
 import moment from 'moment';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -42,13 +43,14 @@ class DetailsPage extends Component {
 
     this.state = {
       timeInterval: moment().subtract(3, 'months').toDate(),
-      modelIndex: [0]
+      modelIndex: [0],
+      snakesShow: true,
+      rollingPredictShow: true,
+      chartSettingsOpen: false
     };
   }
 
   onTimeFrameClick = (timeFrameStr) => {
-    const {prices, predictions, models} = this.props;
-
     let timeInterval = moment();
 
     switch(timeFrameStr) {
@@ -74,7 +76,19 @@ class DetailsPage extends Component {
         timeInterval = timeInterval.subtract(5, 'years');
     }
     this.setState({timeInterval: timeInterval.toDate()});
-    console.log(this.state)
+  }
+
+  onChartSettingsSave = ({snakesShow,rollingPredictShow}) => {
+    this.setState({snakesShow: snakesShow, rollingPredictShow: rollingPredictShow});
+    this.setState({chartSettingsOpen: false});
+  }
+
+  onSettingsIconClick = () => {
+    this.setState({chartSettingsOpen: true});
+  }
+
+  onChartSettingsClose = () => {
+    this.setState({chartSettingsOpen: false});
   }
 
   onModelClick = (modelIndex) => {
@@ -109,6 +123,8 @@ class DetailsPage extends Component {
 
   render() {
     const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes, rollingPredict} = this.props;
+    const {chartSettingsOpen} = this.state;
+
     return (
       <div>
         <StockDetails stock={stock} />
@@ -127,9 +143,12 @@ class DetailsPage extends Component {
               lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
               snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
               rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              className={classes.stockPriceChart} />
+              className={classes.stockPriceChart} 
+              snakesShow={this.state.snakesShow} 
+              rollingPredictShow={this.state.rollingPredictShow} />
             <StockTimeFrame
               onTimeFrameClick={this.onTimeFrameClick} />
+            <SettingsIcon onClick={() => this.onSettingsIconClick()}/>
           </div>
         }
         {
@@ -146,6 +165,16 @@ class DetailsPage extends Component {
             selected={this.state.modelIndex}
             onModelDetailsClick={this.onModelDetailsClick}
             className={classes.stockModelList} />
+        }
+        {
+          chartSettingsOpen &&
+          <ChartSettings 
+              advancedUser={advancedUser}
+              snakesShow={this.state.snakesShow} 
+              chartSettingsOpen={chartSettingsOpen}
+              rollingPredictShow={this.state.rollingPredictShow}
+              onChartSettingsSave={this.onChartSettingsSave} 
+              onChartSettingsClose={this.onChartSettingsClose} />
         }
       </div>
     );

@@ -45,7 +45,7 @@ class StockModelList extends Component {
         </TableHead>
         <TableBody>
           {models.map((model, i) => (
-            <TableRow key={model.modelName}>
+            <TableRow key={i}>
               <TableCell onClick={() => onModelClick(i)}>
                 <Checkbox
                   checked={selected.indexOf(i) !== -1}

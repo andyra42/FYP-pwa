@@ -4,7 +4,7 @@ import immutableToJsComponent from '../immutableToJsComponent';
 
 class StockPriceChart extends Component {
   parseData() {
-    const { advancedUser, prices, predictions, models, timeInterval, upper, lower, snakes, rollingPredict } = this.props;
+    const { advancedUser, prices, predictions, models, timeInterval, upper, lower, snakes, rollingPredict, snakesShow, rollingPredictShow} = this.props;
 
     //current structure:
     //date, curprice, predprice, upper, lower, snake, rollingpredict, predprice, upper, lower, snake, rollingpredict
@@ -57,13 +57,13 @@ class StockPriceChart extends Component {
       if (lower && lower[modelIdx]) {
         dataColIdx++;
       }
-      if (advancedUser && snakes && snakes[modelIdx]) {
+      if (advancedUser && snakes && snakes[modelIdx] && snakesShow) {
         dataColIdx++;
         snakesColIdxs.push(dataColIdx);
       } else {
         snakesColIdxs.push(null);
       }
-      if (advancedUser && rollingPredict && rollingPredict[modelIdx]) {
+      if (advancedUser && rollingPredict && rollingPredict[modelIdx] && rollingPredictShow) {
         dataColIdx++;
         rollingPredictColIdxs.push(dataColIdx);
       } else {
@@ -81,10 +81,10 @@ class StockPriceChart extends Component {
         if (lower && lower[modelIdx]) {
           data[dateIdx].push(null); // lower bound
         }
-        if (advancedUser && snakes && snakes[modelIdx]) {
+        if (snakesColIdxs[modelIdx] !== null) {
           data[dateIdx].push(null); // snakes
         }
-        if (advancedUser && rollingPredict && rollingPredict[modelIdx]) {
+        if (rollingPredictColIdxs[modelIdx] !== null) {
           data[dateIdx].push(null); // rolling predict
         }
       }
@@ -162,7 +162,9 @@ class StockPriceChart extends Component {
             data[snakesLen * (numOfSnakes - snakeIdx) - valueIdx - 1][snakesColIdxs[modelIdx]] = snakes[modelIdx][snakeIdx][valueIdx];
           }
         }
+      }
 
+      for (let modelIdx = 0; modelIdx < numOfModels; modelIdx++) {
         //plot rollingPredict
         if (rollingPredictColIdxs[modelIdx] === null) {
           continue;
@@ -205,10 +207,10 @@ class StockPriceChart extends Component {
         series.push({ color: modelColorForPredict, lineDashStyle: [4, 1] }); //lower bound
       }
       let modelColorForPast = colorOptions[modelIdx % colorOptions.length];
-      if (snakesColIdxs !== null) {
+      if (snakesColIdxs[modelIdx] !== null) {
         series.push({ color: modelColorForPast, lineDashStyle: [5, 2] }); //snake
       }
-      if (rollingPredictColIdxs !== null) {
+      if (rollingPredictColIdxs[modelIdx] !== null) {
         series.push({ color: modelColorForPast, lineDashStyle: [5, 2] }); //rolling predict
       }
     }
