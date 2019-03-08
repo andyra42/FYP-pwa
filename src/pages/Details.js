@@ -146,9 +146,11 @@ class DetailsPage extends Component {
               className={classes.stockPriceChart} 
               snakesShow={this.state.snakesShow} 
               rollingPredictShow={this.state.rollingPredictShow} />
-            <StockTimeFrame
-              onTimeFrameClick={this.onTimeFrameClick} />
-            <SettingsIcon onClick={() => this.onSettingsIconClick()}/>
+            <div style={{display:'flex', justifyContent: 'space-between'}}>
+              <StockTimeFrame
+                onTimeFrameClick={this.onTimeFrameClick} />
+              <SettingsIcon style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={() => this.onSettingsIconClick()}/>
+            </div>
           </div>
         }
         {
