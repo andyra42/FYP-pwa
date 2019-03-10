@@ -1,9 +1,4 @@
 import React, {Component} from 'react';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,7 +16,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 const classes = theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 4,
     overflowX: 'auto',
   },
   table: {
@@ -37,35 +32,35 @@ class StockModelList extends Component {
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
-            <TableCell align="right">Model</TableCell>
-            <TableCell style={{textAlign: 'center'}}>Score</TableCell>
-            <TableCell style={{textAlign: 'center'}}>Prediction</TableCell>
+            <TableCell padding='none' style={{ width: '10%' }}></TableCell>
+            <TableCell padding='none'>Model</TableCell>
+            <TableCell padding='none' style={{textAlign: 'center'}}>Score</TableCell>
+            <TableCell padding='none' style={{textAlign: 'center'}}>Prediction</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {models.map((model, i) => (
             <TableRow key={i}>
-              <TableCell onClick={() => onModelClick(i)}>
+              <TableCell padding='none' onClick={() => onModelClick(i)}>
                 <Checkbox
                   checked={selected.indexOf(i) !== -1}
                   tabIndex={-1}
                   disableRipple
                 />
               </TableCell>
-              <TableCell component="th" scope="row" onClick={() => onModelDetailsClick(i)}>
+              <TableCell padding='none' component="th" scope="row" onClick={() => onModelDetailsClick(i)}>
                 <u><b>{model.modelName}</b></u>
               </TableCell>
-              <TableCell style={{textAlign: 'center'}}>{model.score.toFixed(2)*10}</TableCell>
+              <TableCell padding='none' style={{textAlign: 'center'}}>{(model.score * 10).toFixed(2)}</TableCell>
               {
                 model.direction === 1 &&
-                <TableCell style={{ color: 'green', textAlign: 'center' }}>
+                <TableCell padding='none' style={{ color: 'green', textAlign: 'center' }}>
                   <ArrowUpwardIcon />
                 </TableCell>
               }
               {
                 model.direction === -1 &&
-                <TableCell style={{ color: 'red', textAlign: 'center' }}>
+                <TableCell padding='none' style={{ color: 'red', textAlign: 'center' }}>
                   <ArrowDownwardIcon />
                 </TableCell>
               }
