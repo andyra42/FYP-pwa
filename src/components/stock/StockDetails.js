@@ -48,7 +48,7 @@ const ExpansionPanelSummary = withStyles({
     marginTop:'0',
     '&$expanded': {
       marginTop: '0',
-      marginBottom: '12px'
+      marginBottom: '0'
     },
   },
   expanded: {},
@@ -72,7 +72,9 @@ const styles = theme => ({
     marginBottom:'0'
   },
   stockSector:{
-    marginTop:'0'
+    color:'grey',
+    marginTop:'0',
+    marginBottom:'0'
   },
   expansionSummary:{
     padding:'0',
@@ -104,37 +106,15 @@ class StockDetails extends Component {
     const {expanded} = this.state;
     return (
       <div>
-
-        <Grid
-          justify="space-between" // Add it here :)
-          container 
-          spacing={8}
-        >
-          <Grid item xs={9}>
+        <h4 className={classes.stockSector}> {stock.sector} </h4>
             <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
                 <h2>{stock.name} ({stock.code})</h2>
-                {/* <Typography className={classes.secondaryHeading}>I am an expansion panel</Typography> */}
               </ExpansionPanelSummary>
               <ExpansionPanelDetails style={{padding:'0'}}>
                 <Typography variant="body2" style={{paddingBottom:'10px'}}>{stock.description}</Typography>
               </ExpansionPanelDetails>
             </ExpansionPanel>
-          </Grid>
-
-          <Grid item xs={3}>
-            <div style={{textAlign:'right'}}>
-              <h5 className={classes.industryTag}>Industry   </h5>
-              <h4 className={classes.stockSector}> {stock.sector} </h4>
-              
-              {/* <h3 style={{align:'right'}}>Industry <br/> {stock.sector}</h3> */}
-            </div>
-          </Grid>
-        </Grid>
-
-        {/* <div>
-          <body2>{stock.description}</body2>
-        </div> */}
       </div>
     );
   }
