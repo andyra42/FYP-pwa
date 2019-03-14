@@ -46,6 +46,7 @@ const ExpansionPanelSummary = withStyles({
   },
   content: {
     marginTop:'0',
+    marginBottom: '0',
     '&$expanded': {
       marginTop: '0',
       marginBottom: '0'
@@ -107,14 +108,16 @@ class StockDetails extends Component {
     return (
       <div>
         <h4 className={classes.stockSector}> {stock.sector} </h4>
-            <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
-                <h2>{stock.name} ({stock.code})</h2>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails style={{padding:'0'}}>
-                <Typography variant="body2" style={{paddingBottom:'10px'}}>{stock.description}</Typography>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
+        {/* <div style={{marginBottom:'10px'}}> */}
+          <ExpansionPanel expanded={expanded === 'panel1'} onChange={this.handleChange('panel1')}>
+            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon/>}>
+              <h2 style={{marginTop:'0px', marginBottom:'0px'}}>{stock.name} ({stock.code})</h2>
+            </ExpansionPanelSummary>
+            <ExpansionPanelDetails style={{padding:'0'}}>
+              <Typography variant="body2" style={{paddingBottom:'10px'}}>{stock.description}</Typography>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
+        {/* </div> */}
       </div>
     );
   }

@@ -149,7 +149,10 @@ class DetailsPage extends Component {
             <div style={{display:'flex', justifyContent: 'space-between'}}>
               <StockTimeFrame
                 onTimeFrameClick={this.onTimeFrameClick} />
-              <SettingsIcon style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={() => this.onSettingsIconClick()}/>
+              {
+                advancedUser &&
+                <SettingsIcon style={{marginTop: 'auto', marginBottom: 'auto'}} onClick={() => this.onSettingsIconClick()}/>
+              }
             </div>
           </div>
         }
@@ -169,6 +172,7 @@ class DetailsPage extends Component {
             className={classes.stockModelList} />
         }
         {
+          advancedUser &&
           chartSettingsOpen &&
           <ChartSettings 
               advancedUser={advancedUser}

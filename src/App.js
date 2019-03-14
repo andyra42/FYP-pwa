@@ -156,7 +156,7 @@ class AppBar extends Component {
     const {onMobileDrawerToggle, onLogoutBtnClick, history, location, loading, classes} = this.props;
 
     let appBarIcon;
-    if (location.pathname === '/') {
+    // if (location.pathname === '/') {
       appBarIcon =
           <IconButton
             color="inherit"
@@ -166,15 +166,29 @@ class AppBar extends Component {
           >
             <MenuIcon />
           </IconButton>;
-    } else {
-      appBarIcon =
-          <IconButton
-            color="inherit"
-            aria-label="back"
-            onClick={history.goBack}
-          >
-            <ArrowBackIcon />
-          </IconButton>;
+    // } else {
+    //   appBarIcon =
+    //       <IconButton
+    //         color="inherit"
+    //         aria-label="back"
+    //         onClick={history.goBack}
+    //       >
+    //         <ArrowBackIcon />
+    //       </IconButton>;
+    // }
+
+    let pageTitle;
+    if (location.pathname === '/favourite'){
+      pageTitle = 'Favourite'
+    }
+    else if (location.pathname === '/recent'){
+      pageTitle = 'Recent'
+    }
+    else if (location.pathname === '/settings'){
+      pageTitle = 'Settings'
+    }
+    else {
+      pageTitle = 'StockML'
     }
 
     return (
@@ -182,7 +196,7 @@ class AppBar extends Component {
         <Toolbar>
           {appBarIcon}
           <Typography variant="title" color="inherit" noWrap>
-            App
+            {pageTitle}
           </Typography>
           <div className={classes.grow}/>
           {
