@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +10,7 @@ import immutableToJsComponent from '../immutableToJsComponent';
 import Checkbox from '@material-ui/core/Checkbox';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import RemoveIcon from '@material-ui/icons/Remove';
 // import TouchableScale from 'react-native-touchable-scale'; // https://github.com/kohver/react-native-touchable-scale
 // import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
@@ -26,7 +27,7 @@ const classes = theme => ({
 
 class StockModelList extends Component {
   render() {
-    const {models, onModelClick, selected, onModelDetailsClick} = this.props;
+    const { models, onModelClick, selected, onModelDetailsClick } = this.props;
 
     return (
       <Table className={classes.table}>
@@ -34,8 +35,8 @@ class StockModelList extends Component {
           <TableRow>
             <TableCell padding='none' style={{ width: '10%' }}></TableCell>
             <TableCell padding='none'>Model</TableCell>
-            <TableCell padding='none' style={{textAlign: 'center'}}>Score</TableCell>
-            <TableCell padding='none' style={{textAlign: 'center'}}>Prediction</TableCell>
+            <TableCell padding='none' style={{ textAlign: 'center' }}>Score</TableCell>
+            <TableCell padding='none' style={{ textAlign: 'center' }}>Prediction</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -51,17 +52,23 @@ class StockModelList extends Component {
               <TableCell padding='none' component="th" scope="row" onClick={() => onModelDetailsClick(i)}>
                 <u><b>{model.modelName}</b></u>
               </TableCell>
-              <TableCell padding='none' style={{textAlign: 'center'}}>{(model.score * 10).toFixed(2)}</TableCell>
+              <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.score * 10).toFixed(2)}</TableCell>
               {
-                model.direction === 1 &&
+                model.percentageChange > 0 &&
                 <TableCell padding='none' style={{ color: 'green', textAlign: 'center' }}>
-                  <ArrowUpwardIcon />
+                  <ArrowUpwardIcon /> {'+' + (model.percentageChange * 100).toFixed(2) + '%'}
                 </TableCell>
               }
               {
-                model.direction === -1 &&
+                model.percentageChange < 0 &&
                 <TableCell padding='none' style={{ color: 'red', textAlign: 'center' }}>
-                  <ArrowDownwardIcon />
+                  <ArrowDownwardIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
+                </TableCell>
+              }
+              {
+                model.percentageChange === 0 &&
+                <TableCell padding='none' style={{ color: 'grey', textAlign: 'center' }}>
+                  <RemoveIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
                 </TableCell>
               }
             </TableRow>
