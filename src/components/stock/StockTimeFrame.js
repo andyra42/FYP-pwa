@@ -9,7 +9,7 @@ import immutableToJsComponent from '../immutableToJsComponent';
 class StockTimeFrame extends Component {
   constructor(props) {
     super(props);
-	this.state = {timeframe: '1w'}
+	this.state = {timeframe: '3m'}
   }
 
   render() {
