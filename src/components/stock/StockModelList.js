@@ -31,8 +31,8 @@ class StockModelList extends Component {
     super(props);
 
     this.state = {
-      sortColumn: null,
-      sortDirection: 'asc'
+      sortColumn: 'score',
+      sortDirection: 'desc'
     };
   }
   
@@ -115,7 +115,7 @@ class StockModelList extends Component {
         </TableHead>
         <TableBody>
           {modelsSorted.map((model, i) => (
-            <TableRow key={i}>
+            <TableRow key={i} style={{ backgroundColor: model.score < threshold ? 'rgb(239,239,239)' : ''}}>
               <TableCell padding='none' onClick={() => onModelClick(model.modelIndex)}>
                 <Checkbox
                   checked={selected.indexOf(model.modelIndex) !== -1}
