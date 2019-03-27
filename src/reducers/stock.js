@@ -26,6 +26,7 @@ const stock = (state=INITIAL_STATE, action) => {
           .setIn(['predictions', action.stockCode], action.predictions)
           .setIn(['models', action.stockCode], action.models)
           .setIn(['grade', action.stockCode], action.grade)
+          .setIn(['threshold', action.stockCode], action.threshold)
           .setIn(['upper', action.stockCode], action.upper)
           .setIn(['lower', action.stockCode], action.lower)
           .setIn(['snakes', action.stockCode], action.snakes)

@@ -70,7 +70,7 @@ class StockModelList extends Component {
 
   render() {
     // const { models, onModelClick, selected, onModelDetailsClick, order, orderBy } = this.props;
-    const { models, onModelClick, selected, onModelDetailsClick } = this.props;
+    const { models, threshold, onModelClick, selected, onModelDetailsClick } = this.props;
     const {sortColumn, sortDirection} = this.state;
 
     const modelsSorted = this.sort(

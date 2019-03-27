@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
 import MenuItem from '@material-ui/core/MenuItem';

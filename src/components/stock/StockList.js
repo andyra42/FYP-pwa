@@ -29,7 +29,7 @@ class StockList extends Component {
 			    onClick={() => onAddFavouriteStock(stock.code)}
 			  >
 			    {
-				  this.state.hovered == stock.code 
+				  this.state.hovered === stock.code 
 					? (isFavourite ? <FavoriteBorder /> : <Favorite />)
 					: (isFavourite ? <Favorite /> : <FavoriteBorder />)
 				}

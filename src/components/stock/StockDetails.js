@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import immutableToJsComponent from '../immutableToJsComponent';
 import {withStyles} from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 
 import PropTypes from 'prop-types';
 // import ExpansionPanel from '@material-ui/core/ExpansionPanel';

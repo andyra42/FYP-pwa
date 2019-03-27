@@ -196,7 +196,7 @@ class StockPriceChart extends Component {
 
     //Push options for dashed lines and color mod
     const colorOptions = ['#0B66B2', '#14E84E', '#FFE62D', '#E8623D', '#77FF5A'];
-    const pastColorOptions = ['#fb8c00', '#E614E8', '#3EBCE8', '#FFE045', '#AC34FF'];
+    // const pastColorOptions = ['#fb8c00', '#E614E8', '#3EBCE8', '#FFE045', '#AC34FF'];
     for (let modelIdx = 0; modelIdx < numOfModels; modelIdx++) {
       let modelColorForPredict = colorOptions[modelIdx % colorOptions.length];
       series.push({ color: modelColorForPredict }); //prediction

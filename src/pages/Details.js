@@ -13,6 +13,7 @@ const mapStateToProps = (state, ownProps) => ({
   predictions: state.getIn(['stock', 'predictions', ownProps.match.params.stockCode], null),
   models: state.getIn(['stock', 'models', ownProps.match.params.stockCode], null),
   grade: state.getIn(['stock', 'grade', ownProps.match.params.stockCode], null),
+  threshold: state.getIn(['stock', 'threshold', ownProps.match.params.stockCode], null),
   upper: state.getIn(['stock', 'upper', ownProps.match.params.stockCode], null),
   lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
   snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null),
@@ -122,7 +123,7 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {advancedUser, stock, stockPrices, predictions, models, grade, classes, upper, lower, snakes, rollingPredict} = this.props;
+    const {advancedUser, stock, stockPrices, predictions, models, grade, threshold, classes, upper, lower, snakes, rollingPredict} = this.props;
     const {chartSettingsOpen} = this.state;
 
     return (
@@ -166,6 +167,7 @@ class DetailsPage extends Component {
           models &&
           <StockModelList
             models={models}
+            threshold = {threshold}
             onModelClick={this.onModelClick}
             selected={this.state.modelIndex}
             onModelDetailsClick={this.onModelDetailsClick}

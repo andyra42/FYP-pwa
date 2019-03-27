@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Map, OrderedMap} from 'immutable';
+import {Map} from 'immutable';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
