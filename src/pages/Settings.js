@@ -11,7 +11,9 @@ const styles = () => ({
 });
 
 const mapStateToProps = (state) => ({
-  advancedUser: state.getIn(['auth', 'userProfile', 'advanced'], false)
+  advancedUser: state.getIn(['auth', 'userProfile', 'advanced'], false),
+  snakesShow: state.getIn(['auth', 'userProfile', 'snakesShow'], false),
+  rollingPredictShow: state.getIn(['auth', 'userProfile', 'rollingPredictShow'], false)
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -19,32 +21,65 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class SettingsPage extends Component {
-  onAdvancedBtnChange = (event) => {
+  onUserProfileChange = (key, value) => {
     this.props.setLoading(true);
-    this.props.updateUserProfile({advanced: event.target.checked})
+    this.props.updateUserProfile({[key]: value})
         .then(() => {
           this.props.setLoading(false);
         });
   };
-
-
+  
   render() {
-    const {advancedUser} = this.props;
+    const {advancedUser, snakesShow, rollingPredictShow} = this.props;
 
     return (
-      <FormControl component="fieldset">
-          <FormControlLabel
-            control={
-              <Switch
-                checked={advancedUser}
-                onChange={this.onAdvancedBtnChange}
-                value={this.props.advancedUser}
-              />
-            }
-            label="Advanced User"
-            labelPlacement="start"
-          />
-      </FormControl>
+      <div>
+        <div>
+          <FormControl component="fieldset">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={advancedUser}
+                  onChange={(event) => this.onUserProfileChange('advancedUser', event.target.checked)}
+                  value={advancedUser}
+                />
+              }
+              label="Advanced User"
+              labelPlacement="start"
+            />
+          </FormControl>
+        </div>
+        <div>
+          <FormControl component="fieldset">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={snakesShow}
+                  onChange={(event) => this.onUserProfileChange('snakesShow', event.target.checked)}
+                  value={snakesShow}
+                />
+              }
+              label="Show Snakes"
+              labelPlacement="start"
+            />
+          </FormControl>
+        </div>
+        <div>
+          <FormControl component="fieldset">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={rollingPredictShow}
+                  onChange={(event) => this.onUserProfileChange('rollingPredictShow', event.target.checked)}
+                  value={rollingPredictShow}
+                />
+              }
+              label="Show Rolling Predict"
+              labelPlacement="start"
+            />
+          </FormControl>
+        </div>
+      </div>
     );
   }
 }

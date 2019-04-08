@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {StockDetails, StockPriceChart, StockTimeFrame, StockModelList, StockGrade, ChartSettings} from '../components/stock';
 import {getStock, getStockPrices, getPredictions} from '../actions/stock';
+import {updateUserProfile} from '../actions/auth';
 import SettingsIcon from '@material-ui/icons/Settings';
 import moment from 'moment';
 
@@ -17,13 +18,16 @@ const mapStateToProps = (state, ownProps) => ({
   upper: state.getIn(['stock', 'upper', ownProps.match.params.stockCode], null),
   lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
   snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null),
-  rollingPredict: state.getIn(['stock', 'rollingPredict', ownProps.match.params.stockCode], null)
+  rollingPredict: state.getIn(['stock', 'rollingPredict', ownProps.match.params.stockCode], null),
+  snakesShow: state.getIn(['auth', 'userProfile', 'snakesShow'], false),
+  rollingPredictShow: state.getIn(['auth', 'userProfile', 'rollingPredictShow'], false)
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getStock: (stockCode) => dispatch(getStock(stockCode)),
   getStockPrices: (stockCode) => dispatch(getStockPrices(stockCode)),
-  getPredictions: (stockCode) => dispatch(getPredictions(stockCode))
+  getPredictions: (stockCode) => dispatch(getPredictions(stockCode)),
+  updateUserProfile: userProfile => dispatch(updateUserProfile(userProfile))
 });
 
 const styles = () => ({
@@ -46,8 +50,6 @@ class DetailsPage extends Component {
     this.state = {
       timeInterval: moment().subtract(3, 'months').toDate(),
       modelIndex: [0],
-      snakesShow: true,
-      rollingPredictShow: true,
       chartSettingsOpen: false
     };
   }
@@ -81,7 +83,11 @@ class DetailsPage extends Component {
   }
 
   onChartSettingsSave = ({snakesShow,rollingPredictShow}) => {
-    this.setState({snakesShow: snakesShow, rollingPredictShow: rollingPredictShow});
+    this.props.setLoading(true);
+    this.props.updateUserProfile({snakesShow, rollingPredictShow})
+        .then(() => {
+          this.props.setLoading(false);
+        });
     this.setState({chartSettingsOpen: false});
   }
 
@@ -124,7 +130,22 @@ class DetailsPage extends Component {
   }
 
   render() {
-    const {advancedUser, stock, stockPrices, predictions, models, grade, threshold, classes, upper, lower, snakes, rollingPredict} = this.props;
+    const {
+      advancedUser,
+      stock,
+      stockPrices,
+      predictions,
+      models,
+      grade,
+      threshold,
+      classes,
+      upper,
+      lower,
+      snakes,
+      rollingPredict,
+      snakesShow,
+      rollingPredictShow
+    } = this.props;
     const {chartSettingsOpen} = this.state;
 
     return (
@@ -146,8 +167,8 @@ class DetailsPage extends Component {
                 lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
                 snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
                 rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
-                snakesShow={this.state.snakesShow} 
-                rollingPredictShow={this.state.rollingPredictShow} />
+                snakesShow={snakesShow} 
+                rollingPredictShow={rollingPredictShow} />
             </div>
             <div style={{display:'flex', justifyContent: 'space-between'}}>
               <StockTimeFrame
@@ -180,9 +201,9 @@ class DetailsPage extends Component {
           chartSettingsOpen &&
           <ChartSettings 
               advancedUser={advancedUser}
-              snakesShow={this.state.snakesShow} 
+              snakesShow={snakesShow} 
               chartSettingsOpen={chartSettingsOpen}
-              rollingPredictShow={this.state.rollingPredictShow}
+              rollingPredictShow={rollingPredictShow}
               onChartSettingsSave={this.onChartSettingsSave} 
               onChartSettingsClose={this.onChartSettingsClose} />
         }
