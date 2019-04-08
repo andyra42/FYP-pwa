@@ -45,7 +45,9 @@ class SearchBar extends React.Component {
           label="Search..."
           value={this.props.filterText}
           onChange={this.handleFilterTextChange}
-          margin="normal"
+					margin="normal"
+					fullWidth
+					style={{marginTop: '0px'}}
         />
       </form>
     );
