@@ -7,7 +7,6 @@ import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import SvgIcon from '@material-ui/core/SvgIcon';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -25,7 +24,7 @@ import Hidden from '@material-ui/core/Hidden';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import {withRouter} from 'react-router';
-import {Home, Details, ModelDetails, Settings} from './pages';
+import {Home, Details, ModelDetails, Settings, Login} from './pages';
 import {connect} from 'react-redux';
 import {updateUser, getUserProfile} from './actions/auth';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -50,15 +49,6 @@ const mapDispatchToProps = dispatch => ({
 const drawerWidth = 240;
 
 const styles = theme => ({
-  loginRoot: {
-    alignItems: 'center',
-    display: 'flex',
-    height: '100%',
-    justifyContent: 'center',
-    marginLeft: '50px',
-    marginRight: '50px'
-    // width: '100%'
-  },
   loginIcons:{
     transform:'scale(1.8)',
     position: 'absolute',
@@ -395,16 +385,7 @@ class App extends Component {
 
     if (!uid) {
       return (
-        <div className={classes.loginRoot}>
-          <div className={classes.loginOptionContainer}>
-            <FacebookIcon className={classes.loginIcons}/>
-            <Button onClick={this.onSignInFacebookClick} variant="contained">Sign In Using Facebook</Button>
-          </div>
-          <div className={classes.loginOptionContainer}>
-            <AccountCircleIcon className={classes.loginIcons}/>
-            <Button onClick={this.onSignInAnonymouslyClick} variant="contained">Sign In Anonymously</Button>
-          </div>
-        </div>
+        <Login onSignInFacebookClick={this.onSignInFacebookClick} />
       );
     }
 
