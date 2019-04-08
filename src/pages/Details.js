@@ -55,6 +55,10 @@ class DetailsPage extends Component {
   }
 
   onTimeFrameClick = (timeFrameStr) => {
+    if (timeFrameStr === 'max'){
+      return this.setState({timeInterval: null});
+    }
+
     let timeInterval = moment();
 
     switch(timeFrameStr) {

@@ -25,6 +25,7 @@ class StockTimeFrame extends Component {
             <Button onClick={() => onTimeFrameClick('6m')}>6 Months</Button>
             <Button onClick={() => onTimeFrameClick('1y')}>1 Year</Button>
             <Button onClick={() => onTimeFrameClick('2y')}>2 Years</Button>
+						<Button onClick={() => onTimeFrameClick('max')}>Max</Button>
 		  </div>
 	    </Hidden>
 	    <Hidden mdUp>
@@ -41,6 +42,7 @@ class StockTimeFrame extends Component {
 			  <MenuItem value={'6m'}>6 Months</MenuItem>
 			  <MenuItem value={'1y'}>1 Year</MenuItem>
 			  <MenuItem value={'2y'}>2 Years</MenuItem>
+				<MenuItem value={'max'}>Max</MenuItem>
 		    </Select>
 		  </div>
 	    </Hidden>
