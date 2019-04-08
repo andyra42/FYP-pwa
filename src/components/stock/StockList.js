@@ -7,6 +7,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import immutableToJsComponent from '../immutableToJsComponent';
+import {withStyles} from '@material-ui/core/styles';
+
+const styles = theme => ({
+	favourite: {
+		color: 'red'
+	}
+});
 
 class StockList extends Component {
   constructor(props) {
@@ -15,7 +22,7 @@ class StockList extends Component {
   }
 
   render() {
-    const {stocks, onStockClick, onAddFavouriteStock, isFavourite} = this.props;
+    const {stocks, onStockClick, onAddFavouriteStock, isFavourite, classes} = this.props;
 
     return (
       <List>
@@ -30,8 +37,8 @@ class StockList extends Component {
 			  >
 			    {
 				  this.state.hovered === stock.code 
-					? (isFavourite ? <FavoriteBorder /> : <Favorite />)
-					: (isFavourite ? <Favorite /> : <FavoriteBorder />)
+					? (isFavourite ? <FavoriteBorder /> : <Favorite className={classes.favourite} />)
+					: (isFavourite ? <Favorite className={classes.favourite} /> : <FavoriteBorder />)
 				}
 			  </IconButton>
 			</ListItemSecondaryAction>
@@ -42,4 +49,4 @@ class StockList extends Component {
   }
 }
 
-export default immutableToJsComponent(StockList);
+export default withStyles(styles)(immutableToJsComponent(StockList));
