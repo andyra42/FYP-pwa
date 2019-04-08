@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Map} from 'immutable';
 import {connect} from 'react-redux';
+import TextField from '@material-ui/core/TextField';
 import {withStyles} from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import {StockList} from '../components/stock';
@@ -39,11 +40,12 @@ class SearchBar extends React.Component {
   render() {
     return (
       <form>
-        <input
-          type="text"
-          placeholder="Search..."
+				<TextField
+					id="search-stock"
+          label="Search..."
           value={this.props.filterText}
           onChange={this.handleFilterTextChange}
+          margin="normal"
         />
       </form>
     );
