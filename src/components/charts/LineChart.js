@@ -32,6 +32,11 @@ export default class LineChart extends Component {
   }
 
   render() {
-    return <div ref={this.ref} />;
+    return <div
+      ref={this.ref}
+      style={{
+        height: '100%',
+        width: '100%'
+      }} />;
   }
 }

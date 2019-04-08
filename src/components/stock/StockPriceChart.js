@@ -34,7 +34,9 @@ class StockPriceChart extends Component {
         width: "80%",
         height: "65%",
       },
-      series: series
+      series: series,
+      height: '100%',
+      width: '100%'
     };
 
     // no models selected
@@ -223,7 +225,14 @@ class StockPriceChart extends Component {
     var {data, columns, options} = this.parseData();
 
     return (
-      <LineChart data={data} columns={columns} options={options} />
+      <LineChart
+        data={data}
+        columns={columns}
+        options={options}
+        style={{
+          height: '100%',
+          width: '100%'
+        }} />
     );
   }
 }

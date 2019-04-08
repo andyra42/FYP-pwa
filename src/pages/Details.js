@@ -28,6 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const styles = () => ({
   stockPriceChart: {
+    height: '40vh',
     width: '100%'
   },
   stockModelList: {
@@ -134,19 +135,20 @@ class DetailsPage extends Component {
           predictions &&
           models &&
           <div>
-            <StockPriceChart
-              advancedUser={advancedUser}
-              prices={stockPrices}
-              predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              timeInterval={this.state.timeInterval}
-              upper={upper.filter((upper, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
-              className={classes.stockPriceChart} 
-              snakesShow={this.state.snakesShow} 
-              rollingPredictShow={this.state.rollingPredictShow} />
+            <div className={classes.stockPriceChart}>
+              <StockPriceChart
+                advancedUser={advancedUser}
+                prices={stockPrices}
+                predictions={predictions.filter((prediction, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                models={models.filter((model, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                timeInterval={this.state.timeInterval}
+                upper={upper.filter((upper, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
+                snakesShow={this.state.snakesShow} 
+                rollingPredictShow={this.state.rollingPredictShow} />
+            </div>
             <div style={{display:'flex', justifyContent: 'space-between'}}>
               <StockTimeFrame
                 onTimeFrameClick={this.onTimeFrameClick} />
