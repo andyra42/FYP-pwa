@@ -68,6 +68,21 @@ class StockModelList extends Component {
     });
   }
 
+  componentDidMount() {
+    const {models, onModelClick} = this.props;
+    const {sortColumn, sortDirection} = this.state;
+
+    if (models.length) {
+      const modelsSorted = this.sort(
+        JSON.parse(JSON.stringify(models)),
+        sortColumn,
+        (sortDirection === 'asc') ? 1 : -1
+      );
+
+      onModelClick(modelsSorted[0].modelIndex);
+    }
+  }
+
   render() {
     // const { models, onModelClick, selected, onModelDetailsClick, order, orderBy } = this.props;
     const { models, threshold, onModelClick, selected, onModelDetailsClick } = this.props;
@@ -78,6 +93,19 @@ class StockModelList extends Component {
       sortColumn,
       (sortDirection === 'asc') ? 1 : -1
     );
+
+    // let highestScoreModelIdx = -1;
+    // let highestScore = 0;
+    // for (let i = 0; i < modelsSorted.length; i++) {
+    //   if (modelsSorted[i].score > highestScore) {
+    //     highestScoreModelIdx = i;
+    //     highestScore = modelsSorted[i].score;
+    //   }
+    // }
+
+    // console.log(modelsSorted)
+
+    console.log(selected)
 
     return (
       <Table className={classes.table}>
@@ -123,7 +151,7 @@ class StockModelList extends Component {
                   disableRipple
                 />
               </TableCell>
-              <TableCell padding='none' component="th" scope="row" onClick={() => onModelDetailsClick(i)}>
+              <TableCell padding='none' component="th" scope="row" onClick={() => onModelDetailsClick(model.modelIndex)}>
                 <u><b>{model.modelName}</b></u>
               </TableCell>
               <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.score * 10).toFixed(2)}</TableCell>

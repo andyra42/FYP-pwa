@@ -49,7 +49,7 @@ class DetailsPage extends Component {
 
     this.state = {
       timeInterval: moment().subtract(3, 'months').toDate(),
-      modelIndex: [0],
+      modelIndex: [],
       chartSettingsOpen: false
     };
   }
