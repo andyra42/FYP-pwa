@@ -31,11 +31,11 @@ class StockModelList extends Component {
     super(props);
 
     this.state = {
-      sortColumn: 'score',
+      sortColumn: 'trendScore',
       sortDirection: 'desc'
     };
   }
-  
+
   onHeaderClick = (columnName) => {
     this.setState((oldState) => {
       let newSortDirection = null;
@@ -56,7 +56,7 @@ class StockModelList extends Component {
     if (column === null || direction === null) {
       return models;
     }
-    
+
     return models.sort((m1, m2) => {
       if (m1[column] > m2[column]) {
         return 1 * direction;
@@ -123,11 +123,29 @@ class StockModelList extends Component {
             </TableCell>
             <TableCell padding='none' style={{ textAlign: 'center' }}>
               <TableSortLabel
+                active={sortColumn === 'trendScore'}
+                direction={sortDirection}
+                onClick={() => this.onHeaderClick('trendScore')}
+              >
+                Trend Score
+              </TableSortLabel>
+            </TableCell>
+            <TableCell padding='none' style={{ textAlign: 'center' }}>
+              <TableSortLabel
+                active={sortColumn === 'trend'}
+                direction={sortDirection}
+                onClick={() => this.onHeaderClick('trend')}
+              >
+                Trend Prediction
+              </TableSortLabel>
+            </TableCell>
+            <TableCell padding='none' style={{ textAlign: 'center' }}>
+              <TableSortLabel
                 active={sortColumn === 'score'}
                 direction={sortDirection}
                 onClick={() => this.onHeaderClick('score')}
               >
-                Score
+                Accuracy Score
               </TableSortLabel>
             </TableCell>
             <TableCell padding='none' style={{ textAlign: 'center' }}>
@@ -136,14 +154,14 @@ class StockModelList extends Component {
                 direction={sortDirection}
                 onClick={() => this.onHeaderClick('percentageChange')}
               >
-                Prediction
+                Price Prediction
               </TableSortLabel>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {modelsSorted.map((model, i) => (
-            <TableRow key={i} style={{ backgroundColor: model.score < threshold ? 'rgb(239,239,239)' : ''}}>
+            <TableRow key={i} style={{ backgroundColor: model.trendScore < threshold ? 'rgb(239,239,239)' : ''}}>
               <TableCell padding='none' onClick={() => onModelClick(model.modelIndex)}>
                 <Checkbox
                   checked={selected.indexOf(model.modelIndex) !== -1}
@@ -154,6 +172,19 @@ class StockModelList extends Component {
               <TableCell padding='none' component="th" scope="row" onClick={() => onModelDetailsClick(model.modelIndex)}>
                 <u><b>{model.modelName}</b></u>
               </TableCell>
+              <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.trendScore * 10).toFixed(2)}</TableCell>
+              {
+                model.trend === 1 &&
+                <TableCell padding='none' style={{ color: 'green', textAlign: 'center' }}>
+                  <ArrowUpwardIcon />
+                </TableCell>
+              }
+              {
+                model.trend === -1 &&
+                <TableCell padding='none' style={{ color: 'red', textAlign: 'center' }}>
+                  <ArrowDownwardIcon />
+                </TableCell>
+              }
               <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.score * 10).toFixed(2)}</TableCell>
               {
                 model.percentageChange > 0 &&
