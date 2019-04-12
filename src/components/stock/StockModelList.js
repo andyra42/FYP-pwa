@@ -15,6 +15,8 @@ import RemoveIcon from '@material-ui/icons/Remove';
 // import TouchableScale from 'react-native-touchable-scale'; // https://github.com/kohver/react-native-touchable-scale
 // import LinearGradient from 'react-native-linear-gradient'; // Only if no expo
 
+import Hidden from '@material-ui/core/Hidden';
+
 const classes = theme => ({
   root: {
     width: '100%',
@@ -139,24 +141,26 @@ class StockModelList extends Component {
                 Trend Prediction
               </TableSortLabel>
             </TableCell>
-            <TableCell padding='none' style={{ textAlign: 'center' }}>
-              <TableSortLabel
-                active={sortColumn === 'score'}
-                direction={sortDirection}
-                onClick={() => this.onHeaderClick('score')}
-              >
-                Accuracy Score
-              </TableSortLabel>
-            </TableCell>
-            <TableCell padding='none' style={{ textAlign: 'center' }}>
-              <TableSortLabel
-                active={sortColumn === 'percentageChange'}
-                direction={sortDirection}
-                onClick={() => this.onHeaderClick('percentageChange')}
-              >
-                Price Prediction
-              </TableSortLabel>
-            </TableCell>
+            <Hidden smDown>
+              <TableCell padding='none' style={{ textAlign: 'center' }}>
+                <TableSortLabel
+                  active={sortColumn === 'score'}
+                  direction={sortDirection}
+                  onClick={() => this.onHeaderClick('score')}
+                >
+                  Accuracy Score
+                </TableSortLabel>
+              </TableCell>
+              <TableCell padding='none' style={{ textAlign: 'center' }}>
+                <TableSortLabel
+                  active={sortColumn === 'percentageChange'}
+                  direction={sortDirection}
+                  onClick={() => this.onHeaderClick('percentageChange')}
+                >
+                  Price Prediction
+                </TableSortLabel>
+              </TableCell>
+            </Hidden>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -185,25 +189,27 @@ class StockModelList extends Component {
                   <ArrowDownwardIcon />
                 </TableCell>
               }
-              <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.score * 10).toFixed(2)}</TableCell>
-              {
-                model.percentageChange > 0 &&
-                <TableCell padding='none' style={{ color: 'green', textAlign: 'center' }}>
-                  <ArrowUpwardIcon /> {'+' + (model.percentageChange * 100).toFixed(2) + '%'}
-                </TableCell>
-              }
-              {
-                model.percentageChange < 0 &&
-                <TableCell padding='none' style={{ color: 'red', textAlign: 'center' }}>
-                  <ArrowDownwardIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
-                </TableCell>
-              }
-              {
-                model.percentageChange === 0 &&
-                <TableCell padding='none' style={{ color: 'grey', textAlign: 'center' }}>
-                  <RemoveIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
-                </TableCell>
-              }
+              <Hidden smDown>
+                <TableCell padding='none' style={{ textAlign: 'center' }}>{(model.score * 10).toFixed(2)}</TableCell>
+                {
+                  model.percentageChange > 0 &&
+                  <TableCell padding='none' style={{ color: 'green', textAlign: 'center' }}>
+                    <ArrowUpwardIcon /> {'+' + (model.percentageChange * 100).toFixed(2) + '%'}
+                  </TableCell>
+                }
+                {
+                  model.percentageChange < 0 &&
+                  <TableCell padding='none' style={{ color: 'red', textAlign: 'center' }}>
+                    <ArrowDownwardIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
+                  </TableCell>
+                }
+                {
+                  model.percentageChange === 0 &&
+                  <TableCell padding='none' style={{ color: 'grey', textAlign: 'center' }}>
+                    <RemoveIcon /> {(model.percentageChange * 100).toFixed(2) + '%'}
+                  </TableCell>
+                }
+              </Hidden>
             </TableRow>
           ))}
         </TableBody>
