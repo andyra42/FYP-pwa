@@ -19,6 +19,7 @@ const mapStateToProps = (state, ownProps) => ({
   lower: state.getIn(['stock', 'lower', ownProps.match.params.stockCode], null),
   snakes: state.getIn(['stock', 'snakes', ownProps.match.params.stockCode], null),
   rollingPredict: state.getIn(['stock', 'rollingPredict', ownProps.match.params.stockCode], null),
+  stockTrendScore: state.getIn(['stock', 'stockTrendScore', ownProps.match.params.stockCode], null),
   snakesShow: state.getIn(['auth', 'userProfile', 'snakesShow'], false),
   rollingPredictShow: state.getIn(['auth', 'userProfile', 'rollingPredictShow'], false)
 });
@@ -147,6 +148,7 @@ class DetailsPage extends Component {
       lower,
       snakes,
       rollingPredict,
+      stockTrendScore,
       snakesShow,
       rollingPredictShow
     } = this.props;
@@ -171,7 +173,7 @@ class DetailsPage extends Component {
                 lower={lower.filter((lower, index) => this.state.modelIndex.indexOf(index) !== -1)}
                 snakes={snakes.filter((snakes, index) => this.state.modelIndex.indexOf(index) !== -1)}
                 rollingPredict={rollingPredict.filter((rollingPredict, index) => this.state.modelIndex.indexOf(index) !== -1)}
-                snakesShow={snakesShow} 
+                snakesShow={snakesShow}
                 rollingPredictShow={rollingPredictShow} />
             </div>
             <div style={{display:'flex', justifyContent: 'space-between'}}>
@@ -185,9 +187,9 @@ class DetailsPage extends Component {
           </div>
         }
         {
-          grade !== null &&
+          stockTrendScore !== null &&
           <StockGrade
-            grade={grade}
+            grade={stockTrendScore}
             className={classes.stockGrade} />
         }
         {
@@ -203,12 +205,12 @@ class DetailsPage extends Component {
         {
           advancedUser &&
           chartSettingsOpen &&
-          <ChartSettings 
+          <ChartSettings
               advancedUser={advancedUser}
-              snakesShow={snakesShow} 
+              snakesShow={snakesShow}
               chartSettingsOpen={chartSettingsOpen}
               rollingPredictShow={rollingPredictShow}
-              onChartSettingsSave={this.onChartSettingsSave} 
+              onChartSettingsSave={this.onChartSettingsSave}
               onChartSettingsClose={this.onChartSettingsClose} />
         }
       </div>

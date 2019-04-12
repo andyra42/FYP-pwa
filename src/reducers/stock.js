@@ -30,7 +30,8 @@ const stock = (state=INITIAL_STATE, action) => {
           .setIn(['upper', action.stockCode], action.upper)
           .setIn(['lower', action.stockCode], action.lower)
           .setIn(['snakes', action.stockCode], action.snakes)
-          .setIn(['rollingPredict', action.stockCode], action.rollingPredict);
+          .setIn(['rollingPredict', action.stockCode], action.rollingPredict)
+          .setIn(['stockTrendScore', action.stockCode], action.stockTrendScore);
     default:
       return state;
   }
