@@ -105,7 +105,8 @@ export const getPredictions = (stockCode) => {
       snakes: fromJS(predictions.snakes),
       rollingPredict: fromJS(predictions.rollingPredict),
       grade: fromJS(predictions.grade),
-      threshold: fromJS(predictions.threshold)
+      threshold: fromJS(predictions.threshold),
+      stockTrendScore: fromJS(predictions.stockTrendScore)
     });
   };
 };
