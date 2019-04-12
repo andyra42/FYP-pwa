@@ -40,7 +40,7 @@ class SettingsPage extends Component {
               control={
                 <Switch
                   checked={advancedUser}
-                  onChange={(event) => this.onUserProfileChange('advancedUser', event.target.checked)}
+                  onChange={(event) => this.onUserProfileChange('advanced', event.target.checked)}
                   value={advancedUser}
                 />
               }
