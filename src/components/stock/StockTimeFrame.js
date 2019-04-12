@@ -18,33 +18,34 @@ class StockTimeFrame extends Component {
     return (
 	  <React.Fragment>
 	    <Hidden smDown>
-		  <div>
-		    <Button onClick={() => onTimeFrameClick('1w')}>1 Week</Button>
-            <Button onClick={() => onTimeFrameClick('1m')}>1 Month</Button>
-            <Button onClick={() => onTimeFrameClick('3m')}>3 Months</Button>
-            <Button onClick={() => onTimeFrameClick('6m')}>6 Months</Button>
-            <Button onClick={() => onTimeFrameClick('1y')}>1 Year</Button>
-            <Button onClick={() => onTimeFrameClick('2y')}>2 Years</Button>
-						<Button onClick={() => onTimeFrameClick('max')}>Max</Button>
-		  </div>
+				<div>
+					<InputLabel htmlFor="timeframe" style={{marginRight: '1vw'}}>Time Frame</InputLabel>
+					<Button onClick={() => onTimeFrameClick('1w')}>1 Week</Button>
+					<Button onClick={() => onTimeFrameClick('1m')}>1 Month</Button>
+					<Button onClick={() => onTimeFrameClick('3m')}>3 Months</Button>
+					<Button onClick={() => onTimeFrameClick('6m')}>6 Months</Button>
+					<Button onClick={() => onTimeFrameClick('1y')}>1 Year</Button>
+					<Button onClick={() => onTimeFrameClick('2y')}>2 Years</Button>
+					<Button onClick={() => onTimeFrameClick('max')}>Max</Button>
+				</div>
 	    </Hidden>
 	    <Hidden mdUp>
-		  <div>
-		    <InputLabel htmlFor="timeframe" style={{marginRight: '5vw'}}>Time Frame</InputLabel>
-			<Select
-			  onChange={(event) => { this.setState({timeframe: event.target.value}); onTimeFrameClick(event.target.value); }}
-			  value={this.state.timeframe}
-		      inputProps={{id: 'timeframe'}}
-			>
-			  <MenuItem value={'1w'}>1 Week</MenuItem>
-			  <MenuItem value={'1m'}>1 Month</MenuItem>
-			  <MenuItem value={'3m'}>3 Months</MenuItem>
-			  <MenuItem value={'6m'}>6 Months</MenuItem>
-			  <MenuItem value={'1y'}>1 Year</MenuItem>
-			  <MenuItem value={'2y'}>2 Years</MenuItem>
-				<MenuItem value={'max'}>Max</MenuItem>
-		    </Select>
-		  </div>
+				<div>
+					<InputLabel htmlFor="timeframe" style={{marginRight: '5vw'}}>Time Frame</InputLabel>
+					<Select
+						onChange={(event) => { this.setState({timeframe: event.target.value}); onTimeFrameClick(event.target.value); }}
+						value={this.state.timeframe}
+							inputProps={{id: 'timeframe'}}
+					>
+						<MenuItem value={'1w'}>1 Week</MenuItem>
+						<MenuItem value={'1m'}>1 Month</MenuItem>
+						<MenuItem value={'3m'}>3 Months</MenuItem>
+						<MenuItem value={'6m'}>6 Months</MenuItem>
+						<MenuItem value={'1y'}>1 Year</MenuItem>
+						<MenuItem value={'2y'}>2 Years</MenuItem>
+						<MenuItem value={'max'}>Max</MenuItem>
+					</Select>
+				</div>
 	    </Hidden>
 	  </React.Fragment>
 	);

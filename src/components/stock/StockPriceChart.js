@@ -28,7 +28,8 @@ class StockPriceChart extends Component {
         }
       },
       legend: {
-        position: 'none'
+        position: 'top',
+        maxLines: 3
       },
       chartArea: {
         width: "80%",
