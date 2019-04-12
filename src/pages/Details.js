@@ -185,7 +185,7 @@ class DetailsPage extends Component {
           </div>
         }
         {
-          grade &&
+          grade !== null &&
           <StockGrade
             grade={grade}
             className={classes.stockGrade} />
